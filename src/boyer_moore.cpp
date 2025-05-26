@@ -1,8 +1,6 @@
 #include "../include/definiciones.hpp"
 #include "../include/boyer_moore.hpp"
 
-void BoyerMoore::buscar(const std::string& texto, const std::string& patron, std::vector<int>& posiciones) {
+bool BoyerMoore::buscar(const std::string& nombre_archivo, const std::string& patron) {
     // Implementación del algoritmo Boyer-Moore
-    // Aquí se debe agregar el código para buscar el patrón en el texto utilizando el Boyer-Moore
-    // y llenar el vector posiciones con las posiciones encontradas.  
 }
