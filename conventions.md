@@ -1,5 +1,31 @@
 # Convenciones en C++
 
+## Nombres de archivos
+1. **Archivos fuente (.cpp):** Usar `snake_case` y nombres descriptivos.
+   ```
+   ordenamiento_rapido.cpp
+   gestor_archivos.cpp
+   ```
+
+2. **Archivos de cabecera (.hpp):** También usar `snake_case` y reflejar el contenido o la clase principal.
+   ```
+   gestor_archivos.hpp
+   usuario.hpp
+   ```
+
+3. **Archivos relacionados:** Si un archivo fuente y su cabecera están relacionados, deben compartir el mismo nombre base.
+   ```
+   gestor_archivos.cpp
+   gestor_archivos.hpp
+   ```
+
+4. **Evitar nombres genéricos:** No usar nombres como `main.cpp` para archivos que no sean el punto de entrada del programa.
+
+5. **Archivos de prueba:** Usar el sufijo `_test.cpp` para archivos de pruebas.
+   ```
+   gestor_archivos_test.cpp
+   ```
+
 ## Variables
 1. **Nombres descriptivos**: Los nombres deben describir claramente el propósito de la variable.
    ```cpp
@@ -17,7 +43,7 @@
    ```cpp
    const int MAX_USUARIOS = 100;
    ```
----
+
 
 ## Clases
 1. **PascalCase**: Usar mayúsculas al inicio de cada palabra.
@@ -42,8 +68,6 @@
        // Métodos públicos
    };
    ```
-
----
 
 ## Métodos
 1. **Nombres descriptivos**: Los nombres de los métodos deben describir claramente su propósito o acción.
@@ -81,7 +105,6 @@
    };
    ```
 
----
 
 ## Comentarios
 1. **Comentarios de línea**: Usar `//` para comentarios breves.
@@ -112,8 +135,6 @@
    ```cpp
    int x = 5; // Asignamos 5 a x (innecesario)
    ```
-
----
 
 ## Commits en GitHub
 
