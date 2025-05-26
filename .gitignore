@@ -3,8 +3,9 @@
 test*
 *.csv
 *.txt
+*.o
 .idea/*
 .vscode/*
 vgcore*
-build/*.o
-*/build/*.o
+build/
+*/build/
