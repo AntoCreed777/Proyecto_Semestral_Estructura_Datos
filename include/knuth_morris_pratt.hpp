@@ -14,5 +14,5 @@ class KnuthMorrisPratt {
         static bool buscar(const fs::path& nombre_archivo, const std::string& patron);
 
     private:
-        // Agregar todas las funciones privadas necesarias para implementar el algoritmo de Knuth-Morris-Pratt (KMP)
+        static vc calcular_tabla_de_saltos(const std::string& patron);
 };
