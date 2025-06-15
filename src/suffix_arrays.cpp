@@ -2,17 +2,29 @@
 #include "../include/suffix_arrays.hpp"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 bool SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& patron) {
     // Implementación del algoritmo Suffix Arrays
+    std::vector<std::string> sufijos;
     
-}
+    // String aux
+    std::string texto = nombre_archivo;
 
-int main(){
-    std::string texto = "Hola quisiera comer helado de piña";
-    std::string patron = "comer";
-
-    std::string mensaje = SuffixArrays::buscar(texto,patron) ? "Exito" : "Fracaso";
-    std::cout << mensaje << std::endl;
-
+    while(!texto.empty()){
+        sufijos.push_back(texto);
+        texto.erase(0,1);
+    }
+    
+    // Ordenamos el arreglo de sufijos
+    std::sort(sufijos.begin(), sufijos.end());
+    
+    // Empezar a encontrar el rango de los elementos, devuelve puntero que apunta al sufijo
+    auto it = std::lower_bound(sufijos.begin(), sufijos.end(), patron);
+    
+    // it es un iterador, entonces *it es el string (*i) y substr es para encontrar el substring que parte con patron
+    if(it != sufijos.end() && it->substr(0, patron.size()) == patron) return true;
+    
+    return false;
 }
