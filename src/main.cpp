@@ -7,6 +7,8 @@
 #include "../include/suffix_trees.hpp"
 #include "../include/suffix_arrays.hpp"
 
+#include <chrono>
+
 int main() {
     fs::path nombre_archivo;
     std::string patron;
@@ -28,15 +30,21 @@ int main() {
     };
 
     for (const auto& alg : algoritmos) {
-        std::cout << "\nProbando algoritmo: " << AZUL << alg.first << RESET_COLOR << std::endl;
+        imprimir("\nProbando algoritmo: " << AZUL << alg.first << RESET_COLOR);
+
         try {
-            if (alg.second(nombre_archivo, patron))
-                std::cout << VERDE "Patrón encontrado." RESET_COLOR << std::endl;
-            else
-                std::cout << MAGENTA "Patrón no encontrado." RESET_COLOR << std::endl;
+            
+            auto start = std::chrono::high_resolution_clock::now();
+            bool resultado = alg.second(nombre_archivo, patron);
+            auto end = std::chrono::high_resolution_clock::now();
+
+            if (resultado) imprimir(VERDE "Patrón encontrado." RESET_COLOR);
+            else imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
+            
+            imprimir("Tiempo: " CIAN << (end - start).count() << " ms" RESET_COLOR);
         }
         catch (const std::exception& e) {
-            std::cerr << ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what() << std::endl;
+            imprimir(ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what());
         }
     }
     
