@@ -11,7 +11,7 @@ bool KnuthMorrisPratt::buscar(const fs::path& nombre_archivo, const std::string&
     vc tabla_de_saltos = calcular_tabla_de_saltos(patron);
 
     char caracter;
-    int posicion_patron = 0;
+    size_t posicion_patron = 0;
 
     // Leer carácter por carácter
     while (archivo.get(caracter)) {
@@ -34,9 +34,9 @@ bool KnuthMorrisPratt::buscar(const fs::path& nombre_archivo, const std::string&
 
 vc KnuthMorrisPratt::calcular_tabla_de_saltos(const std::string& patron) {
     vc tabla_de_saltos(patron.size(), 0);
-    int j = 0; // Índice para el prefijo más largo
+    size_t j = 0; // Índice para el prefijo más largo
 
-    for (int i = 1; i < patron.size(); i++) {
+    for (size_t i = 1; i < patron.size(); i++) {
         if (patron[i] == patron[j]) {
             j++;
             tabla_de_saltos[i] = j;
