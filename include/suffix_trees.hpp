@@ -1,6 +1,8 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include <list>
+#include <string>
 
 class SuffixTrees {
     public:
@@ -13,6 +15,18 @@ class SuffixTrees {
          */
         static bool buscar(const fs::path& nombre_archivo, const std::string& patron);
 
-    private:
-        // Agregar todas las funciones privadas necesarias para implementar el algoritmo de Suffix Trees
+        
+    private:        
+        class Node {
+            private:
+                Node* children[256];
+                std::list<int>* ind;
+            
+            public:
+                Node();
+                void insertSuffix(const std::string& suffix, int index);
+                std::list<int>* search(const std::string& pat) const;
+                ~Node();
+        };
 };
+
