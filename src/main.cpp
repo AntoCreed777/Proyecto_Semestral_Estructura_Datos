@@ -23,7 +23,8 @@ int main() {
         {"RobinKarp", RobinKarp::buscar},
         {"FMIndex", FMIndex::buscar},
         {"SuffixArrays", SuffixArrays::buscar},
-        {"SuffixTrees", SuffixTrees::buscar}
+        {"SuffixTrees", SuffixTrees::buscar},
+        {"SuffixTrees VERSION 2", SuffixTrees_VERSION_2::buscar}
     };
 
     for (const auto& alg : algoritmos) {
