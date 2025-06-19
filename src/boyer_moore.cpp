@@ -3,11 +3,14 @@
 #include <string>
 #include <iostream>
 
-bool BoyerMoore::buscar(const std::string& nombre_archivo, const std::string& patron) {
+int BoyerMoore::buscar(const std::string& nombre_archivo, const std::string& patron) {
     int tamanio_patron = patron.length(), tamanio_nombre_archivo = nombre_archivo.length();
     
+    // Contador de aciertos
+    int aciertos = 0;
+
     // Si no tiene largo el patron o el texto
-    if(!tamanio_patron || !tamanio_nombre_archivo) return false;
+    if(!tamanio_patron || !tamanio_nombre_archivo) return 0;
     
     int desplazamiento = 0;
     
@@ -21,7 +24,7 @@ bool BoyerMoore::buscar(const std::string& nombre_archivo, const std::string& pa
         }
 
         // Ahora comparamos si i llego a 0, entonces encontró el patron
-        if(i <= 0) return true;
+        if(i <= 0) aciertos++, desplazamiento += tamanio_patron;
         
         else {
             // Pillar similitudes menores
@@ -32,9 +35,10 @@ bool BoyerMoore::buscar(const std::string& nombre_archivo, const std::string& pa
             
             // Tomar los cambios
             if(aux <= 0) desplazamiento += tamanio_patron;
+
             // Avanzamos un poco hasta que encage con el patron
             else desplazamiento += aux;
         }
     }
-    return false;
+    return aciertos;
 }

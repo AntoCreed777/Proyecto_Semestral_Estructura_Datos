@@ -5,9 +5,12 @@
 #include <vector>
 #include <algorithm>
 
-bool SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& patron) {
+int SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& patron) {
     // Implementación del algoritmo Suffix Arrays
     std::vector<std::string> sufijos;
+    
+    // Aciertos
+    int aciertos = 0;
     
     // String aux
     std::string texto = nombre_archivo;
@@ -24,7 +27,11 @@ bool SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& 
     auto it = std::lower_bound(sufijos.begin(), sufijos.end(), patron);
     
     // it es un iterador, entonces *it es el string (*i) y substr es para encontrar el substring que parte con patron
-    if(it != sufijos.end() && it->substr(0, patron.size()) == patron) return true;
+    while(it != sufijos.end() && it->substr(0, patron.size()) == patron) aciertos++, it++;
     
-    return false;
+    return aciertos;
+}
+
+int main(){
+    std::cout << SuffixArrays::buscar("adfasf mcomer coadasko koacomer ccomer kjskf kmcomerias comer cococococomer", "comer") << std::endl;
 }
