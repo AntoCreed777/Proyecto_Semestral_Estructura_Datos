@@ -18,21 +18,21 @@ int main() {
 
     // Vector de algoritmos de búsqueda de patrones a probar
     std::vector<std::pair<std::string, bool(*)(const fs::path&, const std::string&)>> algoritmos = {
-        {"BoyerMoore", BoyerMoore::buscar},
-        {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
+        // {"BoyerMoore", BoyerMoore::buscar},
+        // {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
         {"RobinKarp", RobinKarp::buscar},
         {"FMIndex", FMIndex::buscar},
-        {"SuffixArrays", SuffixArrays::buscar},
-        {"SuffixTrees", SuffixTrees::buscar}
+        // {"SuffixArrays", SuffixArrays::buscar},
+        // {"SuffixTrees", SuffixTrees::buscar}
     };
 
     for (const auto& alg : algoritmos) {
         std::cout << "\nProbando algoritmo: " << AZUL << alg.first << RESET_COLOR << std::endl;
         try {
             if (alg.second(nombre_archivo, patron))
-                std::cout << VERDE "Patrón encontrado." RESET_COLOR << std::endl;
+                std::cout << VERDE "Patron encontrado." RESET_COLOR << std::endl;
             else
-                std::cout << MAGENTA "Patrón no encontrado." RESET_COLOR << std::endl;
+                std::cout << MAGENTA "Patron no encontrado." RESET_COLOR << std::endl;
         }
         catch (const std::exception& e) {
             std::cerr << ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what() << std::endl;
