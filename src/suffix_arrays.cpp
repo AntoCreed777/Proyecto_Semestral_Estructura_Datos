@@ -31,7 +31,3 @@ int SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& p
     
     return aciertos;
 }
-
-int main(){
-    std::cout << SuffixArrays::buscar("adfasf mcomer coadasko koacomer ccomer kjskf kmcomerias comer cococococomer", "comer") << std::endl;
-}
