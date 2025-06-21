@@ -10,14 +10,14 @@
 class RobinKarp {
 public:
     /**
-     * @brief Busca un patrón en un archivo utilizando el algoritmo de Robin-Karp.
+     * @brief Busca un patrón en un texto utilizando el algoritmo de Robin-Karp.
      * 
-     * @param ruta_archivo Ruta del archivo donde se realizará la búsqueda.
-     * @param patron Cadena patrón a buscar.
-     * @return true Si el patrón se encuentra en el archivo (exacta o por capitalización).
-     * @return false Si no se encuentra o hay error al abrir el archivo.
+     * @param texto Texto donde se realizará la búsqueda.
+     * @param patron Patrón a buscar en el texto.
+     * @return true Si el patrón se encuentra en el texto (exacta o por capitalización).
+     * @return false Si no se encuentra.
      */
-    static bool buscar(const fs::path& ruta_archivo, const std::string& patron);
+    static bool buscar(const std::string& texto, const std::string& patron);
 
 private:
     /**

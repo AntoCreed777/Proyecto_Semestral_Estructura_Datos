@@ -2,13 +2,12 @@
 #include "../include/robin_karp.hpp"
 
 /**
- * @brief Genera todas las variaciones de capitalización posibles del patrón,
- *        modificando `buffer_actual` y agregando resultados a `variaciones_capitalizacion`.
+ * @brief Genera todas las variaciones de capitalización posibles de un patrón.
  * 
- * @param patron Patrón base.
- * @param posicion Posición actual del caracter a modificar.
- * @param buffer_actual Cadena en proceso de generación.
- * @param variaciones_capitalizacion Lista de resultados generados.
+ * @param patron Cadena patrón original.
+ * @param posicion Posición actual en la cadena (para recursión).
+ * @param buffer_actual Cadena temporal donde se construyen las variaciones.
+ * @param variaciones_capitalizacion Vector donde se almacenan todas las variaciones generadas.
  */
 void RobinKarp::generarVariacionesCapitalizacion(
     const std::string& patron,
@@ -26,7 +25,6 @@ void RobinKarp::generarVariacionesCapitalizacion(
         // Rama con minúscula
         buffer_actual[posicion] = std::tolower(static_cast<unsigned char>(caracter_actual));
         generarVariacionesCapitalizacion(patron, posicion + 1, buffer_actual, variaciones_capitalizacion);
-
         // Rama con mayúscula
         buffer_actual[posicion] = std::toupper(static_cast<unsigned char>(caracter_actual));
         generarVariacionesCapitalizacion(patron, posicion + 1, buffer_actual, variaciones_capitalizacion);
@@ -38,30 +36,20 @@ void RobinKarp::generarVariacionesCapitalizacion(
 }
 
 /**
- * @brief Ejecuta el algoritmo de búsqueda Rabin-Karp con soporte para variaciones
- *        de capitalización del patrón.
+ * @brief Busca un patrón en un texto utilizando el algoritmo de Robin-Karp.
  * 
- * @param ruta_archivo Ruta al archivo donde se realizará la búsqueda.
- * @param patron Patrón a buscar.
- * @return true Si se encontró al menos una coincidencia (exacta o por capitalización).
- * @return false Si no se encontró ninguna coincidencia o hubo error de apertura.
+ * @param texto Texto donde se realizará la búsqueda.
+ * @param patron Patrón a buscar en el texto.
+ * @return true Si el patrón se encuentra en el texto (exacta o por capitalización).
+ * @return false Si no se encuentra.
  */
-bool RobinKarp::buscar(const fs::path& ruta_archivo, const std::string& patron) {
+bool RobinKarp::buscar(const std::string& texto, const std::string& patron) {
     const int BASE_HASH = 256;
     const int MODULO_HASH = 101;
 
     int longitud_patron = static_cast<int>(patron.size());
-    if (longitud_patron == 0) return false;
-
-    std::ifstream archivo_entrada(ruta_archivo);
-    if (!archivo_entrada.is_open()) return false;
-
-    std::string texto((std::istreambuf_iterator<char>(archivo_entrada)),
-                      std::istreambuf_iterator<char>());
-    archivo_entrada.close();
-
     int longitud_texto = static_cast<int>(texto.size());
-    if (longitud_texto < longitud_patron) return false;
+    if (longitud_patron == 0 || longitud_texto < longitud_patron) return false;
 
     /**
      * @brief Cuenta cuántas veces aparece un patrón exacto usando Rabin-Karp.

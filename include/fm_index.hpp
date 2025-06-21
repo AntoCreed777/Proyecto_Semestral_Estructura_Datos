@@ -4,19 +4,19 @@
 
 /**
  * @class FMIndex
- * @brief Clase para implementar búsqueda de patrones en archivos mediante FM-Index.
+ * @brief Clase para implementar búsqueda de patrones en textos mediante FM-Index.
  */
 class FMIndex {
 public:
     /**
-     * @brief Busca un patrón en un archivo utilizando el algoritmo FM-Index.
+     * @brief Busca un patrón en un texto utilizando el algoritmo FM-Index.
      * 
-     * @param ruta_archivo Ruta al archivo donde se realizará la búsqueda.
+     * @param texto Texto donde se realizará la búsqueda.
      * @param patron Cadena que representa el patrón a buscar.
-     * @return true Si el patrón se encuentra en el archivo.
-     * @return false Si el patrón no se encuentra o hay error al abrir el archivo.
+     * @return true Si el patrón se encuentra en el texto.
+     * @return false Si el patrón no se encuentra.
      */
-    static bool buscar(const fs::path& ruta_archivo, const std::string& patron);
+    static bool buscar(const std::string& texto, const std::string& patron);
 
 private:
     /**

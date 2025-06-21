@@ -155,19 +155,10 @@ FMIndex::ContadorCoincidencias FMIndex::contarCoincidenciasPatron(const std::str
 }
 
 /**
- * @brief Carga un archivo, construye el índice FM y busca el patrón dado.
+ * @brief Ejecuta el algoritmo FM-Index sobre el texto dado para buscar el patrón.
  */
-bool FMIndex::buscar(const fs::path& ruta_archivo, const std::string& patron) {
-    std::ifstream archivo_entrada(ruta_archivo);
-    if (!archivo_entrada.is_open()) {
-        std::cerr << "Error: No se pudo abrir el archivo " << ruta_archivo << std::endl;
-        return false;
-    }
-
-    std::string texto((std::istreambuf_iterator<char>(archivo_entrada)), {});
-    archivo_entrada.close();
-
-    texto += '$';
+bool FMIndex::buscar(const std::string& texto_original, const std::string& patron) {
+    std::string texto = texto_original + '$';
 
     auto arreglo_sufijos = construirArregloSufijos(texto);
     auto bwt = construirTransformadaBWT(texto, arreglo_sufijos);
