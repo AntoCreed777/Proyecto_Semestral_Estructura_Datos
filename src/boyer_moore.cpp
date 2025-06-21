@@ -24,7 +24,7 @@ unsigned int BoyerMoore::buscar(const std::string& texto, const std::string& pat
         }
 
         // Ahora comparamos si i llego a 0, entonces encontró el patron
-        if(i <= 0) aciertos++, desplazamiento += tamanio_patron;
+        if(i < 0) aciertos++, desplazamiento += tamanio_patron;
         
         else {
             // Pillar similitudes menores
@@ -34,10 +34,10 @@ unsigned int BoyerMoore::buscar(const std::string& texto, const std::string& pat
             while(aux >= 0 && texto[desplazamiento + i] != patron[aux]) aux--;
             
             // Tomar los cambios
-            if(aux <= 0) desplazamiento += tamanio_patron;
+            if(aux < 0) desplazamiento += tamanio_patron;
 
             // Avanzamos un poco hasta que encage con el patron
-            else desplazamiento += aux;
+            else desplazamiento += std::max(1, i - aux);
         }
     }
     return aciertos;
