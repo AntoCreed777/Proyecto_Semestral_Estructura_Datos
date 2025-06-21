@@ -14,6 +14,13 @@
 #include <utility> // Para std::pair
 #include <limits>
 #include <filesystem>
+#include <fstream>
+#include <string>
+#include <cctype>
+#include <unordered_set>
+#include <map>
+#include <algorithm>
+#include <iterator>
 
 namespace fs = std::filesystem;
 
