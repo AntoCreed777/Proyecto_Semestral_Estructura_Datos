@@ -5,19 +5,19 @@
 #include <vector>
 #include <algorithm>
 
-int SuffixArrays::buscar(const std::string& nombre_archivo, const std::string& patron) {
+unsigned int SuffixArrays::buscar(const std::string& texto, const std::string& patron) {
     // Implementación del algoritmo Suffix Arrays
     std::vector<std::string> sufijos;
     
     // Aciertos
-    int aciertos = 0;
+    unsigned int aciertos = 0;
     
     // String aux
-    std::string texto = nombre_archivo;
+    std::string texto_copy = texto;
 
-    while(!texto.empty()){
-        sufijos.push_back(texto);
-        texto.erase(0,1);
+    while(!texto_copy.empty()){
+        sufijos.push_back(texto_copy);
+        texto_copy.erase(0,1);
     }
     
     // Ordenamos el arreglo de sufijos

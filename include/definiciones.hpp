@@ -13,6 +13,9 @@
 #include <vector>
 #include <utility> // Para std::pair
 #include <limits>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 typedef std::vector<int> vc;
 typedef std::pair<int, int> par;
