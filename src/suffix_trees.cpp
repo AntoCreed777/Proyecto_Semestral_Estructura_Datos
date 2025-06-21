@@ -5,20 +5,11 @@
 #include <stdexcept>
 
 // --- SuffixTrees ---
-bool SuffixTrees::buscar(const fs::path& nombre_archivo, const std::string& patron) {
-    std::ifstream archivo(nombre_archivo, std::ios::in);
-    if (!archivo.is_open()) {
-        throw std::ios_base::failure("No se pudo abrir el archivo: " + nombre_archivo.string());
-    }
-
-    std::stringstream buffer;
-    buffer << archivo.rdbuf();
-    std::string contenido = buffer.str();
-
+bool SuffixTrees::buscar(const std::string& texto, const std::string& patron) {
     Node *root = new Node();
     
-    for (int i = 0; i < (int)contenido.length(); i++)
-        root->insertSuffix(contenido.substr(i), i);
+    for (int i = 0; i < (int)texto.length(); i++)
+        root->insertSuffix(texto.substr(i), i);
 
     std::list<int>* ans = root->search(patron);
 
@@ -65,20 +56,11 @@ SuffixTrees::Node::~Node() {
 }
 
 // --- SuffixTrees - VERSION 2 ---
-bool SuffixTrees_VERSION_2::buscar(const fs::path& nombre_archivo, const std::string& patron) {
-    std::ifstream archivo(nombre_archivo, std::ios::in);
-    if (!archivo.is_open()) {
-        throw std::ios_base::failure("No se pudo abrir el archivo: " + nombre_archivo.string());
-    }
-
-    std::stringstream buffer;
-    buffer << archivo.rdbuf();
-    std::string contenido = buffer.str();
-
+bool SuffixTrees_VERSION_2::buscar(const std::string& texto, const std::string& patron) {
     Node *root = new Node();
     
-    for (int i = 0; i < (int)contenido.length(); i++)
-        root->insertSuffix(contenido.substr(i), i);
+    for (int i = 0; i < (int)texto.length(); i++)
+        root->insertSuffix(texto.substr(i), i);
 
     std::unique_ptr<std::list<int>> ans = root->search(patron);
 

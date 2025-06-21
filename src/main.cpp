@@ -10,16 +10,12 @@
 #include <chrono>
 
 int main() {
-    fs::path nombre_archivo;
-    std::string patron;
+    std::string texto, patron;
 
-    input(nombre_archivo, patron);
-
-    imprimir(nombre_archivo.string());
-    imprimir(patron);
+    input(texto, patron);
 
     // Vector de algoritmos de búsqueda de patrones a probar
-    std::vector<std::pair<std::string, bool(*)(const fs::path&, const std::string&)>> algoritmos = {
+    std::vector<std::pair<std::string, bool(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
         {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
         {"RobinKarp", RobinKarp::buscar},
@@ -35,7 +31,7 @@ int main() {
         try {
             
             auto start = std::chrono::high_resolution_clock::now();
-            bool resultado = alg.second(nombre_archivo, patron);
+            bool resultado = alg.second(texto, patron);
             auto end = std::chrono::high_resolution_clock::now();
 
             if (resultado) imprimir(VERDE "Patrón encontrado." RESET_COLOR);

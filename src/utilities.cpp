@@ -3,6 +3,7 @@
 #include "linenoise.h"
 
 #include <cstring>
+#include <fstream>
 #include <sys/select.h>
 
 #define ARCHIVO_HISTORY_FILES "history_files.txt"
@@ -38,13 +39,15 @@ char* hintsPatron(const char* buf, int* color, int* bold) {
     return nullptr;
 }
 
-void solicitarArchivo(fs::path& nombre_archivo) {
+fs::path solicitarArchivo() {
     // --- Inicialización de callbacks y carga de historial para linenoise (archivos) ---
     linenoiseHistoryFree();     // Limpiar historial en memoria para evitar mezclar los historiales
     linenoiseHistoryLoad(ARCHIVO_HISTORY_FILES);        // Cargar historial de archivos
     linenoiseSetCompletionCallback(completionArchivo);  // Autocompletado de archivos
     linenoiseSetHintsCallback(hintsArchivo);            // Sugerencias de color para archivos
     // -------------------------------------------------------------------------------
+
+    fs::path nombre_archivo;
 
     while (true) {
         char* input = linenoise(CIAN "Ingrese el nombre del archivo (o 'exit' para salir): " RESET_COLOR);
@@ -72,19 +75,24 @@ void solicitarArchivo(fs::path& nombre_archivo) {
         }
 
         nombre_archivo = fs::path(entrada); // Convertir la entrada a fs::path
-        if (fs::exists(nombre_archivo)) {
-            nombre_archivo = fs::absolute(nombre_archivo); // Convertir a ruta absoluta
+        
+        if (!fs::exists(nombre_archivo)) {
+            std::cerr << ROJO "Error: El archivo no existe. Intente nuevamente." RESET_COLOR << '\n';
+        }
+        else {
             linenoiseHistoryAdd(entrada.c_str());
             break;
-        } else {
-            std::cerr << ROJO "Error: El archivo no existe. Intente nuevamente." RESET_COLOR << '\n';
         }
     }
 
+    nombre_archivo = fs::absolute(nombre_archivo); // Convertir a ruta absoluta
+
     /* Save the history on disk. */
     if (linenoiseHistorySave(ARCHIVO_HISTORY_FILES) == -1) {
-        throw std::runtime_error("No se pudo guardar el historial de archivos");
+        std::cerr << ROJO "No se pudo guardar el historial de archivos" RESET_COLOR << std::endl;
     }
+
+    return nombre_archivo;
 }
 
 void solicitarPatron(std::string& patron) {
@@ -123,7 +131,18 @@ void solicitarPatron(std::string& patron) {
     }
 }
 
-void input(fs::path& nombre_archivo, std::string& patron) {    
-    solicitarArchivo(nombre_archivo);
+void input(std::string& texto, std::string& patron) {    
+    fs::path nombre_archivo = solicitarArchivo();
+    
+    // Abrir el archivo para extraer el contenido
+    std::ifstream archivo(nombre_archivo, std::ios::in);
+    if (!archivo.is_open()) {
+        throw std::ios_base::failure("No se pudo abrir el archivo: " + nombre_archivo.string());
+    }
+
+    std::stringstream buffer;
+    buffer << archivo.rdbuf();
+    texto = buffer.str();
+
     solicitarPatron(patron);
 }
