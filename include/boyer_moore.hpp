@@ -12,7 +12,4 @@ class BoyerMoore {
          * @return cantidad de ocurrencias encontradas en el texto.
          */
         static unsigned int buscar(const std::string& texto, const std::string& patron);
-
-    private:
-        // Agregar todas las funciones privadas necesarias para implementar el algoritmo de Boyer-Moore
 };
