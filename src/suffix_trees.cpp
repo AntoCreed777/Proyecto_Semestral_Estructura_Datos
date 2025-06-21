@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 // --- SuffixTrees ---
-bool SuffixTrees::buscar(const std::string& texto, const std::string& patron) {
+unsigned int SuffixTrees::buscar(const std::string& texto, const std::string& patron) {
     Node *root = new Node();
     
     for (int i = 0; i < (int)texto.length(); i++)
@@ -15,7 +15,7 @@ bool SuffixTrees::buscar(const std::string& texto, const std::string& patron) {
 
     delete root;
 
-    return ans != nullptr;
+    return (ans) ? static_cast<unsigned int>(ans->size()) : 0;
 }
 
 SuffixTrees::Node::Node() {
@@ -56,15 +56,15 @@ SuffixTrees::Node::~Node() {
 }
 
 // --- SuffixTrees - VERSION 2 ---
-bool SuffixTrees_VERSION_2::buscar(const std::string& texto, const std::string& patron) {
-    Node *root = new Node();
+unsigned int SuffixTrees_VERSION_2::buscar(const std::string& texto, const std::string& patron) {
+    std::unique_ptr<Node> root = std::make_unique<Node>();
     
     for (int i = 0; i < (int)texto.length(); i++)
         root->insertSuffix(texto.substr(i), i);
 
     std::unique_ptr<std::list<int>> ans = root->search(patron);
 
-    return ans != nullptr;
+    return (ans) ? static_cast<unsigned int>(ans->size()) : 0;
 }
 
 void SuffixTrees_VERSION_2::Node::insertSuffix(const std::string& suffix, int index) {
@@ -112,7 +112,7 @@ std::unique_ptr<std::list<int>> SuffixTrees_VERSION_2::Node::search(const std::s
     if (it != children.end())
         return it->second->search(pat.substr(pos + 1));
 
-    return nullptr;
+    return nullptr;  // No se encontró el patrón
 }
 
 void SuffixTrees_VERSION_2::Node::dividirNodo(size_t pos) {

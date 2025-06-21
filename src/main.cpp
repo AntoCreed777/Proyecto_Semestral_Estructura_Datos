@@ -15,7 +15,7 @@ int main() {
     input(texto, patron);
 
     // Vector de algoritmos de búsqueda de patrones a probar
-    std::vector<std::pair<std::string, bool(*)(const std::string&, const std::string&)>> algoritmos = {
+    std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
         {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
         {"RobinKarp", RobinKarp::buscar},
@@ -31,10 +31,10 @@ int main() {
         try {
             
             auto start = std::chrono::high_resolution_clock::now();
-            bool resultado = alg.second(texto, patron);
+            unsigned int resultado = alg.second(texto, patron);
             auto end = std::chrono::high_resolution_clock::now();
 
-            if (resultado) imprimir(VERDE "Patrón encontrado." RESET_COLOR);
+            if (resultado > 0) imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
             else imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
             
             imprimir("Tiempo: " CIAN << (end - start).count() << " ms" RESET_COLOR);

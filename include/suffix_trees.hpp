@@ -13,9 +13,9 @@ class SuffixTrees {
          * 
          * @param texto Texto donde se realizará la búsqueda.
          * @param patron Patrón a buscar en el texto.
-         * @return true Si el patrón se encuentra en el texto.
+         * @return cantidad de ocurrencias encontradas en el texto.
          */
-        static bool buscar(const std::string& texto, const std::string& patron);
+        static unsigned int buscar(const std::string& texto, const std::string& patron);
 
         
     private:        
@@ -39,9 +39,9 @@ class SuffixTrees_VERSION_2 {
          * 
          * @param texto Texto donde se realizará la búsqueda.
          * @param patron Patrón a buscar en el texto.
-         * @return true Si el patrón se encuentra en el texto.
+         * @return cantidad de ocurrencias encontradas en el texto.
          */
-        static bool buscar(const std::string& texto, const std::string& patron);
+        static unsigned int buscar(const std::string& texto, const std::string& patron);
 
     private:
         class Node {
