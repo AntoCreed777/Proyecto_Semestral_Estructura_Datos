@@ -20,8 +20,8 @@ class SuffixTrees {
             class Node {
                 public:
                     Node();
-                    void insertSuffix(const std::string& suffix, int index);
-                    const std::list<int>* search(const std::string& patron) const;
+                    void insertSuffix(const std::string& texto, size_t posicion_texto, int index);
+                    const std::list<int>* search(const std::string& patron, size_t posicion) const;
                     ~Node();
 
                 private:

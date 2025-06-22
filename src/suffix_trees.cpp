@@ -6,26 +6,22 @@ SuffixTrees::Node::Node() {
     children.resize(256);
 }
 
-void SuffixTrees::Node::insertSuffix(const std::string& suffix, int index) {
+void SuffixTrees::Node::insertSuffix(const std::string& texto, size_t posicion_texto, int index) {
     ind->push_back(index);
-    if (!suffix.empty()) {
-        unsigned char c = suffix.at(0);
+    if (posicion_texto < texto.size()) {
+        unsigned char c = texto.at(posicion_texto);
         if (!children[c]) {
             children[c] = std::make_unique<Node>();
         }
-        children[c]->insertSuffix(suffix.substr(1), index);
+        children[c]->insertSuffix(texto, posicion_texto + 1, index);
     }
 }
 
-const std::list<int>* SuffixTrees::Node::search(const std::string& patron) const {
-    if (patron.empty()) {
-        return ind.get();
-    }
-    unsigned char c = patron.at(0);
-    if (children[c]) {
-        return children[c]->search(patron.substr(1));
-    }
-    return nullptr;
+const std::list<int>* SuffixTrees::Node::search(const std::string& patron, size_t posicion) const {
+    if (patron.size() == posicion) return ind.get();
+    
+    unsigned char c = patron.at(posicion);
+    return children[c] ? children[c]->search(patron, posicion + 1) : nullptr;
 }
 
 SuffixTrees::Node::~Node() {}
@@ -35,9 +31,9 @@ unsigned int SuffixTrees::buscar(const std::string& texto, const std::string& pa
 
     auto root = std::make_unique<Node>();
     for (size_t i = 0; i < texto.size(); ++i) {
-        root->insertSuffix(texto.substr(i), i);
+        root->insertSuffix(texto, i, i);
     }
 
-    const std::list<int>* ans = root->search(patron);
+    const std::list<int>* ans = root->search(patron, 0);
     return ans ? static_cast<unsigned int>(ans->size()) : 0;
 }
