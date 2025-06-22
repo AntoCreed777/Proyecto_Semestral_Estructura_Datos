@@ -165,11 +165,13 @@ unsigned int FMIndex::buscar(const std::string& texto, const std::string& patron
     ContadorCoincidencias coincidencias = contarCoincidenciasPatron(texto, patron);
     const int total_coincidencias = coincidencias.coincidencias_exactas + coincidencias.coincidencias_capitalizacion;
 
+    /*
     if (total_coincidencias > 0) {
         std::cout << AMARILLO << "Coincidencias exactas: " << coincidencias.coincidencias_exactas << RESET_COLOR << std::endl;
         std::cout << CIAN << "Coincidencias con mayusculas/minusculas: " << coincidencias.coincidencias_capitalizacion << RESET_COLOR << std::endl;
         std::cout << ROJO << "Total coincidencias: " << total_coincidencias << RESET_COLOR << std::endl;
     }
+    */
 
     return total_coincidencias;
 }

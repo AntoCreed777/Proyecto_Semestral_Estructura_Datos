@@ -104,11 +104,13 @@ unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patr
 
     int total_coincidencias = coincidencias_exactas + coincidencias_capitalizacion;
 
+    /*
     if (total_coincidencias > 0) {
         std::cout << AMARILLO << "Coincidencias exactas: " << coincidencias_exactas << RESET_COLOR << std::endl;
         std::cout << CIAN << "Coincidencias con mayusculas/minusculas: " << coincidencias_capitalizacion << RESET_COLOR << std::endl;
         std::cout << ROJO << "Total coincidencias: " << total_coincidencias << RESET_COLOR << std::endl;
     }
+    */
 
     return total_coincidencias;
 }
