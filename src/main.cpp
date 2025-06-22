@@ -35,7 +35,7 @@ int main() {
             if (resultado > 0) imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
             else imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
             
-            imprimir("Tiempo: " CIAN << (end - start).count() << " ms" RESET_COLOR);
+            imprimir("Tiempo: " CIAN << (end - start).count() / 1000 << " ms" RESET_COLOR);
         }
         catch (const std::exception& e) {
             imprimir(ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what());
