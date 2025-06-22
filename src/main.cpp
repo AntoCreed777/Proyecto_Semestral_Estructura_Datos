@@ -21,15 +21,13 @@ int main() {
         {"RobinKarp", RobinKarp::buscar},
         {"FMIndex", FMIndex::buscar},
         {"SuffixArrays", SuffixArrays::buscar},
-        {"SuffixTrees", SuffixTrees::buscar},
-        {"SuffixTrees VERSION 2", SuffixTrees_VERSION_2::buscar}
+        {"SuffixTrees", SuffixTrees::buscar}
     };
 
     for (const auto& alg : algoritmos) {
         imprimir("\nProbando algoritmo: " << AZUL << alg.first << RESET_COLOR);
 
         try {
-            
             auto start = std::chrono::high_resolution_clock::now();
             unsigned int resultado = alg.second(texto, patron);
             auto end = std::chrono::high_resolution_clock::now();

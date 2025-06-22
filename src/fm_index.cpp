@@ -158,13 +158,11 @@ FMIndex::ContadorCoincidencias FMIndex::contarCoincidenciasPatron(const std::str
  * @brief Ejecuta el algoritmo FM-Index sobre el texto dado para buscar el patrón.
  */
 unsigned int FMIndex::buscar(const std::string& texto, const std::string& patron) {
-    std::string texto_aux = texto + '$';
-
-    auto arreglo_sufijos = construirArregloSufijos(texto_aux);
-    auto bwt = construirTransformadaBWT(texto_aux, arreglo_sufijos);
+    auto arreglo_sufijos = construirArregloSufijos(texto);
+    auto bwt = construirTransformadaBWT(texto, arreglo_sufijos);
     auto tabla_inicio_caracter = construirTablaInicioCaracter(bwt);
     auto tabla_ocurrencias = construirTablaOcurrencias(bwt);
-    ContadorCoincidencias coincidencias = contarCoincidenciasPatron(texto_aux, patron);
+    ContadorCoincidencias coincidencias = contarCoincidenciasPatron(texto, patron);
     const int total_coincidencias = coincidencias.coincidencias_exactas + coincidencias.coincidencias_capitalizacion;
 
     if (total_coincidencias > 0) {
