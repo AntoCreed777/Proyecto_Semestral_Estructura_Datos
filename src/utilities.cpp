@@ -1,6 +1,5 @@
 #include "../include/definiciones.hpp"
 #include "../include/utilities.hpp"
-#include "linenoise.h"
 
 #include <cstring>
 #include <fstream>
