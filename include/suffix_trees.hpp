@@ -7,6 +7,10 @@
 
 class SuffixTrees {
     public:
+
+        SuffixTrees(const std::string& texto);
+        ~SuffixTrees();
+
         /**
          * @brief Busca un patrón en un texto utilizando el algoritmo de Suffix Trees.
          * 
@@ -14,7 +18,7 @@ class SuffixTrees {
          * @param patron Patrón a buscar en el texto.
          * @return cantidad de ocurrencias encontradas en el texto.
          */
-        static unsigned int buscar(const std::string& texto, const std::string& patron);
+        unsigned int buscar(const std::string& patron) const;
 
         private:
             class Node {
@@ -28,4 +32,6 @@ class SuffixTrees {
                     std::unique_ptr<std::list<int>> ind;
                     std::vector<std::unique_ptr<Node>> children;
             };
+
+            std::unique_ptr<Node> root;
 };

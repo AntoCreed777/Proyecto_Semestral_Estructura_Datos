@@ -24,16 +24,26 @@ const std::list<int>* SuffixTrees::Node::search(const std::string& patron, size_
     return children[c] ? children[c]->search(patron, posicion + 1) : nullptr;
 }
 
-SuffixTrees::Node::~Node() {}
-
-unsigned int SuffixTrees::buscar(const std::string& texto, const std::string& patron) {
-    if (texto.empty() || patron.empty()) return 0;
-
-    auto root = std::make_unique<Node>();
-    for (size_t i = 0; i < texto.size(); ++i) {
-        root->insertSuffix(texto, i, i);
+SuffixTrees::Node::~Node() {
+    for (auto& child : children) {
+        child.reset();
     }
+}
 
-    const std::list<int>* ans = root->search(patron, 0);
+SuffixTrees::SuffixTrees(const std::string& texto) {
+    if (texto.empty()) return ;
+
+    this->root = std::make_unique<Node>();
+    for (size_t i = 0; i < texto.size(); ++i) {
+        this->root->insertSuffix(texto, i, i);
+    }
+}
+
+SuffixTrees::~SuffixTrees() {
+    this->root.reset();
+}
+
+unsigned int SuffixTrees::buscar(const std::string& patron) const {
+    const std::list<int>* ans = this->root->search(patron, 0);
     return ans ? static_cast<unsigned int>(ans->size()) : 0;
 }

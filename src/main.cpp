@@ -8,6 +8,7 @@
 #include "../include/suffix_arrays.hpp"
 
 #include <chrono>
+#include <functional>
 
 int main() {
     std::string texto, patron;
@@ -18,10 +19,33 @@ int main() {
     std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
         {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
-        {"RobinKarp", RobinKarp::buscar},
-        {"FMIndex", FMIndex::buscar},
-        {"SuffixArrays", SuffixArrays::buscar},
-        {"SuffixTrees", SuffixTrees::buscar}
+        {"RobinKarp", RobinKarp::buscar}
+    };
+
+    std::vector<
+        std::tuple<
+            std::string, 
+            std::function<std::unique_ptr<SuffixTrees>(const std::string&)>, 
+            std::function<unsigned int(const SuffixTrees&, const std::string&)>
+        >
+    > algoritmos_estructura = {
+        /*
+        {
+            "FMIndex",
+            [](const std::string& texto) { return std::make_unique<FMIndex>(texto); },
+            [](const FMIndex& alg, const std::string& patron) { return alg.buscar(patron); }
+        },
+        {
+            "SuffixArrays",
+            [](const std::string& texto) { return std::make_unique<SuffixArrays>(texto); },
+            [](const SuffixArrays& alg, const std::string& patron) { return alg.buscar(patron); }
+        },
+        */
+        {
+            "SuffixTrees", 
+            [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); },
+            [](const SuffixTrees& alg, const std::string& patron) { return alg.buscar(patron); }
+        }
     };
 
     for (const auto& alg : algoritmos) {
@@ -35,10 +59,40 @@ int main() {
             if (resultado > 0) imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
             else imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
             
-            imprimir("Tiempo: " CIAN << (end - start).count() / 1000 << " ms" RESET_COLOR);
+            imprimir(AMARILLO "Tiempo: " CIAN << (end - start).count() / 1000 << " ms" RESET_COLOR);
         }
         catch (const std::exception& e) {
             imprimir(ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what());
+        }
+    }
+
+    // Prueba con algoritmos de estructura
+    for (const auto& alg : algoritmos_estructura) {
+        imprimir("\nProbando estructura: " << AZUL << std::get<0>(alg) << RESET_COLOR);
+
+        try {
+            
+            // Construcción
+            auto start = std::chrono::high_resolution_clock::now();
+            auto estructura = std::get<1>(alg)(texto);
+            auto end = std::chrono::high_resolution_clock::now();
+
+            imprimir(AMARILLO "Tiempo de construccion: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
+
+            // Búsqueda
+            start = std::chrono::high_resolution_clock::now();
+            unsigned int resultado = std::get<2>(alg)(*estructura, patron);
+            end = std::chrono::high_resolution_clock::now();
+
+            if (resultado > 0) 
+                imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
+            else 
+                imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
+
+            imprimir(AMARILLO "Tiempo de busqueda: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
+        }
+        catch (const std::exception& e) {
+            imprimir(ROJO "Error en " << std::get<0>(alg) << ": " RESET_COLOR << e.what());
         }
     }
     
