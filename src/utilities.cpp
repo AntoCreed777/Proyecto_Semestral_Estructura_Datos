@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include <fstream>
-#include <sys/select.h>
 
 #define ARCHIVO_HISTORY_FILES "history_files.txt"
 #define ARCHIVO_HISTORY_PATRON "history_patron.txt"
