@@ -1,5 +1,6 @@
 #include "../include/definiciones.hpp"
 #include "../include/utilities.hpp"
+#include "../include/class_base.hpp"
 #include "../include/boyer_moore.hpp"
 #include "../include/fm_index.hpp"
 #include "../include/knuth_morris_pratt.hpp"
@@ -23,28 +24,30 @@ int main() {
     };
 
     std::vector<
-        std::tuple<
+        std::pair<
             std::string, 
-            std::function<std::unique_ptr<SuffixTrees>(const std::string&)>, 
-            std::function<unsigned int(const SuffixTrees&, const std::string&)>
+            std::function<std::unique_ptr<BaseStructure>(const std::string&)>
         >
     > algoritmos_estructura = {
         /*
         {
             "FMIndex",
-            [](const std::string& texto) { return std::make_unique<FMIndex>(texto); },
-            [](const FMIndex& alg, const std::string& patron) { return alg.buscar(patron); }
-        },
-        {
-            "SuffixArrays",
-            [](const std::string& texto) { return std::make_unique<SuffixArrays>(texto); },
-            [](const SuffixArrays& alg, const std::string& patron) { return alg.buscar(patron); }
+            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
+                return std::make_unique<FMIndex>(texto); 
+            }
         },
         */
         {
+            "SuffixArrays",
+            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
+                return std::make_unique<SuffixArrays>(texto); 
+            }
+        },
+        {
             "SuffixTrees", 
-            [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); },
-            [](const SuffixTrees& alg, const std::string& patron) { return alg.buscar(patron); }
+            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
+                return std::make_unique<SuffixTrees>(texto); 
+            }
         }
     };
 
@@ -68,20 +71,20 @@ int main() {
 
     // Prueba con algoritmos de estructura
     for (const auto& alg : algoritmos_estructura) {
-        imprimir("\nProbando estructura: " << AZUL << std::get<0>(alg) << RESET_COLOR);
+        imprimir("\nProbando estructura: " << AZUL << alg.first << RESET_COLOR);
 
         try {
             
             // Construcción
             auto start = std::chrono::high_resolution_clock::now();
-            auto estructura = std::get<1>(alg)(texto);
+            auto estructura = alg.second(texto);
             auto end = std::chrono::high_resolution_clock::now();
 
             imprimir(AMARILLO "Tiempo de construccion: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
 
             // Búsqueda
             start = std::chrono::high_resolution_clock::now();
-            unsigned int resultado = std::get<2>(alg)(*estructura, patron);
+            unsigned int resultado = estructura->buscar(patron);
             end = std::chrono::high_resolution_clock::now();
 
             if (resultado > 0) 

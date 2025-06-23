@@ -1,11 +1,12 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include "class_base.hpp"
 #include <list>
 #include <memory>
 #include <unordered_map>
 
-class SuffixTrees {
+class SuffixTrees: public BaseStructure {
     public:
 
         SuffixTrees(const std::string& texto);
@@ -18,7 +19,7 @@ class SuffixTrees {
          * @param patron Patrón a buscar en el texto.
          * @return cantidad de ocurrencias encontradas en el texto.
          */
-        unsigned int buscar(const std::string& patron) const;
+        unsigned int buscar(const std::string& patron) const override;
 
         private:
             class Node {

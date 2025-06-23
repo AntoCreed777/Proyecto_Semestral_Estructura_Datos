@@ -1,15 +1,20 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include "class_base.hpp"
 
-class SuffixArrays {
+class SuffixArrays: public BaseStructure {
     public:
+        SuffixArrays(const std::string& texto);
+        
         /**
          * @brief Busca un patrón en un texto utilizando el algoritmo de Suffix Arrays.
          * 
-         * @param texto Texto donde se realizará la búsqueda.
          * @param patron Patrón a buscar en el texto.
          * @return cantidad de ocurrencias encontradas en el texto.
          */
-        static unsigned int buscar(const std::string& texto, const std::string& patron);
+        unsigned int buscar(const std::string& patron) const override;
+
+    private:
+        std::vector<std::string> sufijos;
 };
