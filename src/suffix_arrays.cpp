@@ -21,10 +21,7 @@ unsigned int SuffixArrays::buscar(const std::string& patron) const {
     auto it = std::lower_bound(this->sufijos.begin(), this->sufijos.end(), patron);
     
     // it es un iterador, entonces *it es el string (*i) y substr es para encontrar el substring que parte con patron
-    while(it != this->sufijos.end() && it->compare(0, patron.size(), patron) == 0) {
-        std::cout << "Coincidencia encontrada: " << *it << std::endl;
-        aciertos++, it++;
-    }
+    while(it != this->sufijos.end() && it->compare(0, patron.size(), patron) == 0) aciertos++, it++;
     
     return aciertos;
 }
