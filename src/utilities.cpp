@@ -46,7 +46,7 @@ fs::path solicitarArchivo() {
 void solicitarPatron(std::string& patron) {
     while (true) {
         std::string entrada;
-        std::cout << CIAN "Ingrese el patrón a buscar (o 'exit' para salir): " RESET_COLOR;
+        std::cout << CIAN "Ingrese el patron a buscar (o 'exit' para salir): " RESET_COLOR;
         std::cin >> entrada;
 
         if (entrada == "exit") {
@@ -58,7 +58,7 @@ void solicitarPatron(std::string& patron) {
             patron = entrada;
             break;
         } else {
-            std::cerr << ROJO "Error: El patrón no puede estar vacío. Intente nuevamente." RESET_COLOR << '\n';
+            std::cerr << ROJO "Error: El patron no puede estar vacío. Intente nuevamente." RESET_COLOR << '\n';
         }
     }
 }
