@@ -135,18 +135,24 @@ bool FMIndex::existePatronExactoEnFmIndex(
  */
 FMIndex::ContadorCoincidencias FMIndex::contarCoincidenciasPatron(const std::string& texto, const std::string& patron) {
     ContadorCoincidencias contador;
-    size_t longitud_patron = patron.size();
-    size_t longitud_texto = texto.size();
 
-    if (longitud_patron == 0 || longitud_texto < longitud_patron) return contador;
+    if (patron.empty() || texto.size() < patron.size()) return contador;
 
+    // Construcción de estructuras FM una sola vez
+    auto arreglo_sufijos = construirArregloSufijos(texto);
+    auto bwt = construirTransformadaBWT(texto, arreglo_sufijos);
+    auto tabla_inicio_caracter = construirTablaInicioCaracter(bwt);
+    auto tabla_ocurrencias = construirTablaOcurrencias(bwt);
+
+    // 1. Buscar coincidencia exacta
+    if (existePatronExactoEnFmIndex(bwt, tabla_inicio_caracter, tabla_ocurrencias, patron)) {
+        contador.coincidencias_exactas++;
+    }
+
+    // 2. Buscar coincidencias con capitalización
     auto variaciones_capitalizacion = generarVariacionesCapitalizacion(patron);
-
-    for (size_t i = 0; i <= longitud_texto - longitud_patron; ++i) {
-        std::string subcadena(texto.begin() + i, texto.begin() + i + longitud_patron);
-        if (subcadena == patron) {
-            contador.coincidencias_exactas++;
-        } else if (variaciones_capitalizacion.count(subcadena)) {
+    for (const auto& variacion : variaciones_capitalizacion) {
+        if (existePatronExactoEnFmIndex(bwt, tabla_inicio_caracter, tabla_ocurrencias, variacion)) {
             contador.coincidencias_capitalizacion++;
         }
     }
@@ -158,10 +164,6 @@ FMIndex::ContadorCoincidencias FMIndex::contarCoincidenciasPatron(const std::str
  * @brief Ejecuta el algoritmo FM-Index sobre el texto dado para buscar el patrón.
  */
 unsigned int FMIndex::buscar(const std::string& texto, const std::string& patron) {
-    auto arreglo_sufijos = construirArregloSufijos(texto);
-    auto bwt = construirTransformadaBWT(texto, arreglo_sufijos);
-    auto tabla_inicio_caracter = construirTablaInicioCaracter(bwt);
-    auto tabla_ocurrencias = construirTablaOcurrencias(bwt);
     ContadorCoincidencias coincidencias = contarCoincidenciasPatron(texto, patron);
     const int total_coincidencias = coincidencias.coincidencias_exactas + coincidencias.coincidencias_capitalizacion;
 
