@@ -16,6 +16,11 @@ int main() {
 
     input(texto, patron);
 
+    if (texto.empty()) {
+        imprimir(AMARILLO "No hay contenido en el archivo" RESET_COLOR);
+        return 0;
+    }
+
     // Vector de algoritmos de búsqueda de patrones a probar
     std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
