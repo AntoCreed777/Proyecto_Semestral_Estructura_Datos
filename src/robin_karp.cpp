@@ -89,6 +89,7 @@ unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patr
     // Coincidencias exactas
     int coincidencias_exactas = contarCoincidenciasPatron(patron);
 
+    /*
     // Generar todas las variaciones de capitalización
     std::vector<std::string> variaciones_capitalizacion;
     std::string buffer_actual = patron;
@@ -101,8 +102,9 @@ unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patr
             coincidencias_capitalizacion += contarCoincidenciasPatron(variante);
         }
     }
+    */
 
-    int total_coincidencias = coincidencias_exactas + coincidencias_capitalizacion;
+    int total_coincidencias = coincidencias_exactas; // + coincidencias_capitalizacion;
 
     /*
     if (total_coincidencias > 0) {
