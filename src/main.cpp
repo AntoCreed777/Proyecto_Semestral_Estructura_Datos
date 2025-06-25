@@ -25,7 +25,7 @@ int main() {
     std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
         {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
-        {"RobinKarp", RobinKarp::buscar}
+        {"RobinKarp", RobinKarp::buscar},
     };
 
     std::vector<
@@ -34,14 +34,12 @@ int main() {
             std::function<std::unique_ptr<BaseStructure>(const std::string&)>
         >
     > algoritmos_estructura = {
-        /*
         {
             "FMIndex",
             [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
                 return std::make_unique<FMIndex>(texto); 
             }
         },
-        */
         {
             "SuffixArrays",
             [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
@@ -64,10 +62,12 @@ int main() {
             unsigned int resultado = alg.second(texto, patron);
             auto end = std::chrono::high_resolution_clock::now();
 
-            if (resultado > 0) imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
-            else imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
-            
-            imprimir(AMARILLO "Tiempo: " CIAN << (end - start).count() / 1000 << " ms" RESET_COLOR);
+            if (resultado > 0) imprimir(VERDE "Patron encontrado " BLANCO << resultado << " veces." RESET_COLOR);
+            else imprimir(MAGENTA "Patron no encontrado." RESET_COLOR);
+
+            // Tiempo en milisegundos
+            auto duracion_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+            imprimir(AMARILLO "Tiempo: " CIAN << duracion_ms << " ms" RESET_COLOR);
         }
         catch (const std::exception& e) {
             imprimir(ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what());
@@ -93,11 +93,11 @@ int main() {
             end = std::chrono::high_resolution_clock::now();
 
             if (resultado > 0) 
-                imprimir(VERDE "Patrón encontrado " BLANCO << resultado << " veces." RESET_COLOR);
+                imprimir(VERDE "Patron encontrado " BLANCO << resultado << " veces." RESET_COLOR);
             else 
-                imprimir(MAGENTA "Patrón no encontrado." RESET_COLOR);
+                imprimir(MAGENTA "Patron no encontrado." RESET_COLOR);
 
-            imprimir(AMARILLO "Tiempo de busqueda: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
+            imprimir(ROJO "Tiempo de busqueda: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
         }
         catch (const std::exception& e) {
             imprimir(ROJO "Error en " << std::get<0>(alg) << ": " RESET_COLOR << e.what());
