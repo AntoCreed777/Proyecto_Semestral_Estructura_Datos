@@ -34,12 +34,14 @@ int main() {
             std::function<std::unique_ptr<BaseStructure>(const std::string&)>
         >
     > algoritmos_estructura = {
+        /*
         {
             "FMIndex",
             [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
                 return std::make_unique<FMIndex>(texto); 
             }
         },
+        */
         {
             "SuffixArrays",
             [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
