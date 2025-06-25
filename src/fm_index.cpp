@@ -2,10 +2,52 @@
 #include "../include/fm_index.hpp"
 
 /**
+ * @brief Constructor que inicializa la estructura FM-Index con el texto dado.
+ *        Utiliza el texto para construir las estructuras necesarias (BWT, tablas).
+ */
+FMIndex::FMIndex(const std::string& texto) : texto_(texto) {
+    arreglo_sufijos_ = construirArregloSufijos(texto_);
+    bwt_ = construirTransformadaBWT(texto_, arreglo_sufijos_);
+    tabla_inicio_caracter_ = construirTablaInicioCaracter(bwt_);
+    tabla_ocurrencias_ = construirTablaOcurrencias(bwt_);
+}
+
+/**
+ * @brief Uso de FM-Index para contar cuántas veces aparece el patrón
+ *        en el texto preprocesado. Este método es no estático.
+ */
+unsigned int FMIndex::buscar(const std::string& patron) const {
+    if (patron.empty()) return 0;
+
+    int i = static_cast<int>(patron.size()) - 1;
+    char c = patron[i];
+
+    if (!tabla_inicio_caracter_.count(c)) return 0;
+
+    int inicio = tabla_inicio_caracter_.at(c);
+    int fin = inicio + tabla_ocurrencias_.at(c).back();
+
+    while (i > 0 && inicio < fin) {
+        i--;
+        c = patron[i];
+        if (!tabla_inicio_caracter_.count(c)) return 0;
+
+        int nuevo_inicio = tabla_inicio_caracter_.at(c) + (inicio > 0 ? tabla_ocurrencias_.at(c)[inicio - 1] : 0);
+        int nuevo_fin = tabla_inicio_caracter_.at(c) + tabla_ocurrencias_.at(c)[fin - 1];
+
+        inicio = nuevo_inicio;
+        fin = nuevo_fin;
+    }
+
+    unsigned int coincidencias = (inicio < fin) ? (fin - inicio) : 0;
+    return coincidencias;
+}
+
+/**
  * @brief Genera todas las combinaciones posibles del patrón con variaciones
  *        de mayúsculas y minúsculas, excluyendo el patrón original.
  */
-std::unordered_set<std::string> FMIndex::generarVariacionesCapitalizacion(const std::string& patron) {
+std::unordered_set<std::string> FMIndex::generarVariacionesCapitalizacion(const std::string& patron) const {
     std::unordered_set<std::string> variaciones;
     // int longitud = static_cast<int>(patron.length());
     // int total_variaciones = 1 << longitud;
@@ -99,7 +141,16 @@ std::map<char, std::vector<int>> FMIndex::construirTablaOcurrencias(const std::s
 }
 
 /**
- * @brief Uso de FM-Index para contar cuántas veces aparece el patrón.
+ * @brief Método estático alternativo que permite buscar sin construir la clase.
+ * 
+ * Esta función realiza todo el proceso (construcción de BWT, tablas, etc.)
+ * desde cero en cada llamada. Es útil para búsquedas puntuales cuando no se
+ * necesita reutilizar estructuras ni mantener estado.
+ * 
+ * Se mantiene junto al constructor y al método no estático para dar flexibilidad:
+ * - El método estático es ideal para búsquedas únicas o pruebas rápidas.
+ * - La versión con constructor es más eficiente para múltiples búsquedas
+ *   sobre el mismo texto, ya que evita reprocesar todo cada vez.
  */
 unsigned int FMIndex::buscar(const std::string& texto, const std::string& patron) {
     if (patron.empty()) return 0;

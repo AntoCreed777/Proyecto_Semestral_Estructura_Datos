@@ -1,15 +1,31 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include "class_base.hpp"
 
 /**
  * @class FMIndex
  * @brief Clase para implementar búsqueda de patrones en textos mediante FM-Index.
  */
-class FMIndex {
+class FMIndex : public BaseStructure {  // Herencia
 public:
     /**
-     * @brief Busca un patrón en un texto utilizando el algoritmo de FM-Index.
+     * @brief Constructor que inicializa la estructura FM-Index con el texto.
+     * 
+     * @param texto Texto donde se construirá el índice.
+     */
+    FMIndex(const std::string& texto);  // Constructor
+
+    /**
+     * @brief Busca un patrón en el texto previamente procesado.
+     * 
+     * @param patron Patrón a buscar.
+     * @return Cantidad de ocurrencias encontradas.
+     */
+    unsigned int buscar(const std::string& patron) const override;  // Override
+
+    /**
+     * @brief Versión estática de búsqueda para uso directo sin construir instancia.
      * 
      * @param texto Texto donde se realizará la búsqueda.
      * @param patron Patrón a buscar en el texto.
@@ -18,20 +34,20 @@ public:
     static unsigned int buscar(const std::string& texto, const std::string& patron);
 
 private:
-        /**
-         * @brief Genera todas las variaciones de capitalización de un patrón,
-         *        excluyendo el patrón original.
-         * 
-         * @param patron Cadena patrón original.
-         * @return std::unordered_set<std::string> Conjunto con todas las variaciones.
-         */
-        static std::unordered_set<std::string> generarVariacionesCapitalizacion(const std::string& patron);
+    /**
+     * @brief Genera todas las variaciones de capitalización de un patrón,
+     *        excluyendo el patrón original.
+     * 
+     * @param patron Cadena patrón original.
+     * @return std::unordered_set<std::string> Conjunto con todas las variaciones.
+     */
+    std::unordered_set<std::string> generarVariacionesCapitalizacion(const std::string& patron) const;
 
     /**
      * @brief Construye el arreglo de sufijos de un texto.
      * 
      * @param texto Texto fuente.
-         * @return std::vector<int> Vector con los índices del arreglo de sufijos.
+     * @return std::vector<int> Vector con los índices del arreglo de sufijos.
      */
     static std::vector<int> construirArregloSufijos(const std::string& texto);
 
@@ -40,7 +56,7 @@ private:
      * 
      * @param texto Texto original.
      * @param arreglo_sufijos Arreglo de sufijos construido sobre el texto.
-         * @return std::string Cadena resultante de la BWT.
+     * @return std::string Cadena resultante de la BWT.
      */
     static std::string construirTransformadaBWT(const std::string& texto, const std::vector<int>& arreglo_sufijos);
 
@@ -59,4 +75,11 @@ private:
      * @return Tabla de ocurrencias.
      */
     static std::map<char, std::vector<int>> construirTablaOcurrencias(const std::string& bwt);
+
+    // Miembros de instancia
+    std::string texto_;
+    std::vector<int> arreglo_sufijos_;
+    std::string bwt_;
+    std::map<char, int> tabla_inicio_caracter_;
+    std::map<char, std::vector<int>> tabla_ocurrencias_;
 };
