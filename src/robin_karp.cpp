@@ -43,7 +43,7 @@ void RobinKarp::generarVariacionesCapitalizacion(
  * @return true Si el patrón se encuentra en el texto (exacta o por capitalización).
  * @return false Si no se encuentra.
  */
-bool RobinKarp::buscar(const std::string& texto, const std::string& patron) {
+unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patron) {
     const int BASE_HASH = 256;
     const int MODULO_HASH = 101;
 
@@ -89,6 +89,7 @@ bool RobinKarp::buscar(const std::string& texto, const std::string& patron) {
     // Coincidencias exactas
     int coincidencias_exactas = contarCoincidenciasPatron(patron);
 
+    /*
     // Generar todas las variaciones de capitalización
     std::vector<std::string> variaciones_capitalizacion;
     std::string buffer_actual = patron;
@@ -101,14 +102,17 @@ bool RobinKarp::buscar(const std::string& texto, const std::string& patron) {
             coincidencias_capitalizacion += contarCoincidenciasPatron(variante);
         }
     }
+    */
 
-    int total_coincidencias = coincidencias_exactas + coincidencias_capitalizacion;
+    int total_coincidencias = coincidencias_exactas; // + coincidencias_capitalizacion;
 
+    /*
     if (total_coincidencias > 0) {
         std::cout << AMARILLO << "Coincidencias exactas: " << coincidencias_exactas << RESET_COLOR << std::endl;
         std::cout << CIAN << "Coincidencias con mayusculas/minusculas: " << coincidencias_capitalizacion << RESET_COLOR << std::endl;
         std::cout << ROJO << "Total coincidencias: " << total_coincidencias << RESET_COLOR << std::endl;
     }
+    */
 
-    return total_coincidencias > 0;
+    return total_coincidencias;
 }

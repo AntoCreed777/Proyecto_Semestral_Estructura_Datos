@@ -2,4 +2,4 @@
 
 #include "definiciones.hpp"
 
-void input(fs::path& nombre_archivo, std::string& patron);
+void input(std::string& texto, std::string& patron);

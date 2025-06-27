@@ -2,26 +2,68 @@
 #include "../include/fm_index.hpp"
 
 /**
+ * @brief Constructor que inicializa la estructura FM-Index con el texto dado.
+ *        Utiliza el texto para construir las estructuras necesarias (BWT, tablas).
+ */
+FMIndex::FMIndex(const std::string& texto) : texto_(texto) {
+    arreglo_sufijos_ = construirArregloSufijos(texto_);
+    bwt_ = construirTransformadaBWT(texto_, arreglo_sufijos_);
+    tabla_inicio_caracter_ = construirTablaInicioCaracter(bwt_);
+    tabla_ocurrencias_ = construirTablaOcurrencias(bwt_);
+}
+
+/**
+ * @brief Uso de FM-Index para contar cuántas veces aparece el patrón
+ *        en el texto preprocesado. Este método es no estático.
+ */
+unsigned int FMIndex::buscar(const std::string& patron) const {
+    if (patron.empty()) return 0;
+
+    int i = static_cast<int>(patron.size()) - 1;
+    char c = patron[i];
+
+    if (!tabla_inicio_caracter_.count(c)) return 0;
+
+    int inicio = tabla_inicio_caracter_.at(c);
+    int fin = inicio + tabla_ocurrencias_.at(c).back();
+
+    while (i > 0 && inicio < fin) {
+        i--;
+        c = patron[i];
+        if (!tabla_inicio_caracter_.count(c)) return 0;
+
+        int nuevo_inicio = tabla_inicio_caracter_.at(c) + (inicio > 0 ? tabla_ocurrencias_.at(c)[inicio - 1] : 0);
+        int nuevo_fin = tabla_inicio_caracter_.at(c) + tabla_ocurrencias_.at(c)[fin - 1];
+
+        inicio = nuevo_inicio;
+        fin = nuevo_fin;
+    }
+
+    unsigned int coincidencias = (inicio < fin) ? (fin - inicio) : 0;
+    return coincidencias;
+}
+
+/**
  * @brief Genera todas las combinaciones posibles del patrón con variaciones
  *        de mayúsculas y minúsculas, excluyendo el patrón original.
  */
-std::unordered_set<std::string> FMIndex::generarVariacionesCapitalizacion(const std::string& patron) {
+std::unordered_set<std::string> FMIndex::generarVariacionesCapitalizacion(const std::string& patron) const {
     std::unordered_set<std::string> variaciones;
-    int longitud = static_cast<int>(patron.length());
-    int total_variaciones = 1 << longitud;
+    // int longitud = static_cast<int>(patron.length());
+    // int total_variaciones = 1 << longitud;
 
-    for (int mascara = 0; mascara < total_variaciones; ++mascara) {
-        std::string variacion;
-        variacion.reserve(longitud);
-        for (int posicion = 0; posicion < longitud; ++posicion) {
-            bool es_mayuscula = (mascara >> posicion) & 1;
-            variacion += es_mayuscula ? static_cast<char>(std::toupper(patron[posicion]))
-                                      : static_cast<char>(std::tolower(patron[posicion]));
-        }
-        if (variacion != patron) {
-            variaciones.insert(variacion);
-        }
-    }
+    // for (int mascara = 0; mascara < total_variaciones; ++mascara) {
+    //     std::string variacion;
+    //     variacion.reserve(longitud);
+    //     for (int posicion = 0; posicion < longitud; ++posicion) {
+    //         bool es_mayuscula = (mascara >> posicion) & 1;
+    //         variacion += es_mayuscula ? static_cast<char>(std::toupper(patron[posicion]))
+    //                                   : static_cast<char>(std::tolower(patron[posicion]));
+    //     }
+    //     if (variacion != patron) {
+    //         variaciones.insert(variacion);
+    //     }
+    // }
     return variaciones;
 }
 
@@ -45,7 +87,7 @@ std::vector<int> FMIndex::construirArregloSufijos(const std::string& texto) {
 }
 
 /**
- * @brief Construye la Burrows-Wheeler Transform (BWT) desde el arreglo de sufijos.
+ * @brief Construye la BWT (Burrows-Wheeler Transform) desde el arreglo de sufijos.
  */
 std::string FMIndex::construirTransformadaBWT(const std::string& texto, const std::vector<int>& arreglo_sufijos) {
     std::string bwt(texto.size(), '$');
@@ -99,79 +141,92 @@ std::map<char, std::vector<int>> FMIndex::construirTablaOcurrencias(const std::s
 }
 
 /**
- * @brief Verifica si un patrón existe exactamente en el índice FM.
+ * @brief Método estático alternativo que permite buscar sin construir la clase.
+ * 
+ * Esta función realiza todo el proceso (construcción de BWT, tablas, etc.)
+ * desde cero en cada llamada. Es útil para búsquedas puntuales cuando no se
+ * necesita reutilizar estructuras ni mantener estado.
+ * 
+ * Se mantiene junto al constructor y al método no estático para dar flexibilidad:
+ * - El método estático es ideal para búsquedas únicas o pruebas rápidas.
+ * - La versión con constructor es más eficiente para múltiples búsquedas
+ *   sobre el mismo texto, ya que evita reprocesar todo cada vez.
  */
-bool FMIndex::existePatronExactoEnFmIndex(
-    const std::string& bwt,
-    const std::map<char, int>& tabla_inicio_caracter,
-    const std::map<char, std::vector<int>>& tabla_ocurrencias,
-    const std::string& patron
-) {
-    if (patron.empty()) return false;
-
-    int posicion = static_cast<int>(patron.size()) - 1;
-    char caracter_actual = patron[posicion];
-
-    if (!tabla_inicio_caracter.count(caracter_actual)) return false;
-
-    int inicio = tabla_inicio_caracter.at(caracter_actual) + 1;
-    int fin = tabla_inicio_caracter.at(caracter_actual) + (tabla_ocurrencias.count(caracter_actual) ? tabla_ocurrencias.at(caracter_actual).back() : 0);
-
-    while (inicio <= fin && posicion >= 1) {
-        caracter_actual = patron[posicion - 1];
-        if (!tabla_inicio_caracter.count(caracter_actual)) return false;
-
-        int inicio_caracter = tabla_inicio_caracter.at(caracter_actual);
-        inicio = inicio_caracter + (inicio > 1 ? tabla_ocurrencias.at(caracter_actual)[inicio - 2] : 0) + 1;
-        fin = inicio_caracter + tabla_ocurrencias.at(caracter_actual)[fin - 1];
-        --posicion;
-    }
-
-    return fin >= inicio;
-}
-
-/**
- * @brief Estructura para almacenar cantidad de coincidencias encontradas.
- */
-FMIndex::ContadorCoincidencias FMIndex::contarCoincidenciasPatron(const std::string& texto, const std::string& patron) {
-    ContadorCoincidencias contador;
-    size_t longitud_patron = patron.size();
-    size_t longitud_texto = texto.size();
-
-    if (longitud_patron == 0 || longitud_texto < longitud_patron) return contador;
-
-    auto variaciones_capitalizacion = generarVariacionesCapitalizacion(patron);
-
-    for (size_t i = 0; i <= longitud_texto - longitud_patron; ++i) {
-        std::string subcadena(texto.begin() + i, texto.begin() + i + longitud_patron);
-        if (subcadena == patron) {
-            contador.coincidencias_exactas++;
-        } else if (variaciones_capitalizacion.count(subcadena)) {
-            contador.coincidencias_capitalizacion++;
-        }
-    }
-
-    return contador;
-}
-
-/**
- * @brief Ejecuta el algoritmo FM-Index sobre el texto dado para buscar el patrón.
- */
-bool FMIndex::buscar(const std::string& texto_original, const std::string& patron) {
-    std::string texto = texto_original + '$';
+unsigned int FMIndex::buscar(const std::string& texto, const std::string& patron) {
+    if (patron.empty()) return 0;
 
     auto arreglo_sufijos = construirArregloSufijos(texto);
     auto bwt = construirTransformadaBWT(texto, arreglo_sufijos);
     auto tabla_inicio_caracter = construirTablaInicioCaracter(bwt);
     auto tabla_ocurrencias = construirTablaOcurrencias(bwt);
-    ContadorCoincidencias coincidencias = contarCoincidenciasPatron(texto, patron);
-    const int total_coincidencias = coincidencias.coincidencias_exactas + coincidencias.coincidencias_capitalizacion;
 
+    int i = static_cast<int>(patron.size()) - 1;
+    char c = patron[i];
+
+    if (!tabla_inicio_caracter.count(c)) return 0;
+
+    int inicio = tabla_inicio_caracter[c];
+    int fin = inicio + tabla_ocurrencias[c].back();
+
+    while (i > 0 && inicio < fin) {
+        i--;
+        c = patron[i];
+        if (!tabla_inicio_caracter.count(c)) return 0;
+
+        int nuevo_inicio = tabla_inicio_caracter[c] + (inicio > 0 ? tabla_ocurrencias[c][inicio - 1] : 0);
+        int nuevo_fin = tabla_inicio_caracter[c] + tabla_ocurrencias[c][fin - 1];
+
+        inicio = nuevo_inicio;
+        fin = nuevo_fin;
+    }
+
+    unsigned int coincidencias = (inicio < fin) ? (fin - inicio) : 0;
+
+    /*
+    // Si se desea considerar también coincidencias con diferentes combinaciones
+    // de mayúsculas y minúsculas (por ejemplo, "Casa", "CASA", "cAsA", etc.),
+    // descomenta esta sección.
+
+    auto variaciones = generarVariacionesCapitalizacion(patron);
+    for (const auto& variante : variaciones) {
+        if (variante.empty()) continue;
+
+        int j = static_cast<int>(variante.size()) - 1;
+        char ch = variante[j];
+
+        if (!tabla_inicio_caracter.count(ch)) continue;
+
+        int ini = tabla_inicio_caracter[ch];
+        int fin2 = ini + tabla_ocurrencias[ch].back();
+
+        while (j > 0 && ini < fin2) {
+            j--;
+            ch = variante[j];
+            if (!tabla_inicio_caracter.count(ch)) {
+                ini = fin2 = 0;
+                break;
+            }
+
+            int nuevo_ini = tabla_inicio_caracter[ch] + (ini > 0 ? tabla_ocurrencias[ch][ini - 1] : 0);
+            int nuevo_fin = tabla_inicio_caracter[ch] + tabla_ocurrencias[ch][fin2 - 1];
+
+            ini = nuevo_ini;
+            fin2 = nuevo_fin;
+        }
+
+        if (ini < fin2) {
+            coincidencias += (fin2 - ini);
+        }
+    }
+    */
+
+    /*
     if (total_coincidencias > 0) {
         std::cout << AMARILLO << "Coincidencias exactas: " << coincidencias.coincidencias_exactas << RESET_COLOR << std::endl;
         std::cout << CIAN << "Coincidencias con mayusculas/minusculas: " << coincidencias.coincidencias_capitalizacion << RESET_COLOR << std::endl;
         std::cout << ROJO << "Total coincidencias: " << total_coincidencias << RESET_COLOR << std::endl;
     }
+    */
 
-    return total_coincidencias > 0;
+    return coincidencias;
 }

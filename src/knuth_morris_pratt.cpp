@@ -2,34 +2,29 @@
 #include "../include/knuth_morris_pratt.hpp"
 #include <fstream>
 
-bool KnuthMorrisPratt::buscar(const fs::path& nombre_archivo, const std::string& patron) {
-    std::ifstream archivo(nombre_archivo, std::ios::in);
-    if (!archivo.is_open()) {
-        throw std::ios_base::failure("No se pudo abrir el archivo: " + nombre_archivo.string());
-    }
-
+unsigned int KnuthMorrisPratt::buscar(const std::string& texto, const std::string& patron) {
     vc tabla_de_saltos = calcular_tabla_de_saltos(patron);
 
-    char caracter;
     size_t posicion_patron = 0;
+    unsigned int ocurrencias = 0;
 
     // Leer carácter por carácter
-    while (archivo.get(caracter)) {
+    for (char caracter : texto) {
+        while (posicion_patron > 0 && caracter != patron[posicion_patron]) {
+            posicion_patron = tabla_de_saltos[posicion_patron - 1];
+        }
+
         if (caracter == patron[posicion_patron]) {
             posicion_patron++;
-            if (posicion_patron == patron.size()) {
-                // Se encontró el patrón completo
-                archivo.close();
-                return true;
-            }
         }
-        else {
-            posicion_patron = (posicion_patron > 0) ? tabla_de_saltos[posicion_patron] : 0;
+
+        if (posicion_patron == patron.size()) {
+            ocurrencias++;
+            posicion_patron = tabla_de_saltos[posicion_patron - 1];
         }
     }
 
-    archivo.close();
-    return false;   // El patrón no fue encontrado
+    return ocurrencias;   // Retorna la cantidad de ocurrencias encontradas
 }
 
 vc KnuthMorrisPratt::calcular_tabla_de_saltos(const std::string& patron) {
@@ -37,18 +32,16 @@ vc KnuthMorrisPratt::calcular_tabla_de_saltos(const std::string& patron) {
     size_t j = 0; // Índice para el prefijo más largo
 
     for (size_t i = 1; i < patron.size(); i++) {
-        if (patron[i] == patron[j]) {
-            j++;
-            tabla_de_saltos[i] = j;
-        } else if (j > 0) {
-            // Retroceder usando valores previos de la tabla
-            j = tabla_de_saltos[j - 1];
-            i--; // Revisar el carácter actual nuevamente
-        } else {
-            // No hay coincidencias
-            tabla_de_saltos[i] = 0;
-        }
-    }
 
+        // Retroceder usando valores previos de la tabla
+        while (j > 0 && patron[i] != patron[j]) {
+            j = tabla_de_saltos[j - 1];
+        }
+
+        if (patron[i] == patron[j]) j++;
+
+        tabla_de_saltos[i] = j;
+    }
+    
     return tabla_de_saltos;
 }

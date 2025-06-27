@@ -1,46 +1,80 @@
 #include "../include/definiciones.hpp"
 #include "../include/utilities.hpp"
 
-void solicitarArchivo(fs::path& nombre_archivo) {
+#include <cstring>
+#include <fstream>
+#include <sstream>
+
+fs::path solicitarArchivo() {
+    fs::path nombre_archivo;
+
     while (true) {
-        std::cout << "Ingrese el nombre del archivo (o 'exit' para salir): ";
         std::string entrada;
-        std::getline(std::cin, entrada);
+        std::cout << CIAN "Ingrese el nombre del archivo (o 'exit' para salir): " RESET_COLOR;
+        std::cin >> entrada;
 
         if (entrada == "exit") {
-            std::cout << "Saliendo del programa...\n";
+            std::cout << BLANCO "Saliendo del programa...\n" RESET_COLOR;
             exit(0);
         }
 
-        nombre_archivo = entrada; // Convertir la entrada a fs::path
-        if (fs::exists(nombre_archivo)) {
-            nombre_archivo = fs::absolute(nombre_archivo); // Convertir a ruta absoluta
-            break;
-        } else {
+        // Expansión de ~ al home del usuario
+        if (!entrada.empty() && entrada[0] == '~') {
+
+            #ifdef _WIN32
+                const char* home = std::getenv("USERPROFILE");
+            #else
+                const char* home = std::getenv("HOME");
+            #endif
+
+            if (home) entrada.replace(0, 1, home);
+        }
+
+        nombre_archivo = fs::path(entrada); // Convertir la entrada a fs::path
+        
+        if (!fs::exists(nombre_archivo)) {
             std::cerr << ROJO "Error: El archivo no existe. Intente nuevamente." RESET_COLOR << '\n';
         }
+        else break;
     }
+
+    nombre_archivo = fs::absolute(nombre_archivo); // Convertir a ruta absoluta
+
+    return nombre_archivo;
 }
 
 void solicitarPatron(std::string& patron) {
     while (true) {
-        std::cout << "Ingrese el patrón a buscar (o 'exit' para salir): ";
-        std::getline(std::cin, patron);
+        std::string entrada;
+        std::cout << CIAN "Ingrese el patron a buscar (o 'exit' para salir): " RESET_COLOR;
+        std::cin >> entrada;
 
-        if (patron == "exit") {
-            std::cout << "Saliendo del programa...\n";
+        if (entrada == "exit") {
+            std::cout << BLANCO "Saliendo del programa...\n" RESET_COLOR;
             exit(0);
         }
 
-        if (!patron.empty()) {
+        if (!entrada.empty()) {
+            patron = entrada;
             break;
         } else {
-            std::cerr << ROJO "Error: El patrón no puede estar vacío. Intente nuevamente." RESET_COLOR << '\n';
+            std::cerr << ROJO "Error: El patron no puede estar vacío. Intente nuevamente." RESET_COLOR << '\n';
         }
     }
 }
 
-void input(fs::path& nombre_archivo, std::string& patron) {
-    solicitarArchivo(nombre_archivo);
+void input(std::string& texto, std::string& patron) {    
+    fs::path nombre_archivo = solicitarArchivo();
+    
+    // Abrir el archivo para extraer el contenido
+    std::ifstream archivo(nombre_archivo, std::ios::in);
+    if (!archivo.is_open()) {
+        throw std::ios_base::failure("No se pudo abrir el archivo: " + nombre_archivo.string());
+    }
+
+    std::stringstream buffer;
+    buffer << archivo.rdbuf();
+    texto = buffer.str();
+
     solicitarPatron(patron);
 }

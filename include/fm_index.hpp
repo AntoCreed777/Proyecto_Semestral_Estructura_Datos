@@ -1,22 +1,37 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include "class_base.hpp"
 
 /**
  * @class FMIndex
  * @brief Clase para implementar búsqueda de patrones en textos mediante FM-Index.
  */
-class FMIndex {
+class FMIndex : public BaseStructure {  // Herencia
 public:
     /**
-     * @brief Busca un patrón en un texto utilizando el algoritmo FM-Index.
+     * @brief Constructor que inicializa la estructura FM-Index con el texto.
+     * 
+     * @param texto Texto donde se construirá el índice.
+     */
+    FMIndex(const std::string& texto);  // Constructor
+
+    /**
+     * @brief Busca un patrón en el texto previamente procesado.
+     * 
+     * @param patron Patrón a buscar.
+     * @return Cantidad de ocurrencias encontradas.
+     */
+    unsigned int buscar(const std::string& patron) const override;  // Override
+
+    /**
+     * @brief Versión estática de búsqueda para uso directo sin construir instancia.
      * 
      * @param texto Texto donde se realizará la búsqueda.
-     * @param patron Cadena que representa el patrón a buscar.
-     * @return true Si el patrón se encuentra en el texto.
-     * @return false Si el patrón no se encuentra.
+     * @param patron Patrón a buscar en el texto.
+     * @return Cantidad de ocurrencias encontradas en el texto.
      */
-    static bool buscar(const std::string& texto, const std::string& patron);
+    static unsigned int buscar(const std::string& texto, const std::string& patron);
 
 private:
     /**
@@ -26,7 +41,7 @@ private:
      * @param patron Cadena patrón original.
      * @return std::unordered_set<std::string> Conjunto con todas las variaciones.
      */
-    static std::unordered_set<std::string> generarVariacionesCapitalizacion(const std::string& patron);
+    std::unordered_set<std::string> generarVariacionesCapitalizacion(const std::string& patron) const;
 
     /**
      * @brief Construye el arreglo de sufijos de un texto.
@@ -49,7 +64,7 @@ private:
      * @brief Construye la tabla de inicio por carácter (tabla C) a partir de la BWT.
      * 
      * @param bwt Cadena BWT.
-     * @return std::map<char, int> Tabla C.
+     * @return Tabla C.
      */
     static std::map<char, int> construirTablaInicioCaracter(const std::string& bwt);
 
@@ -57,42 +72,14 @@ private:
      * @brief Construye la tabla de ocurrencias (Occ) para cada carácter y posición en la BWT.
      * 
      * @param bwt Cadena BWT.
-     * @return std::map<char, std::vector<int>> Tabla de ocurrencias.
+     * @return Tabla de ocurrencias.
      */
     static std::map<char, std::vector<int>> construirTablaOcurrencias(const std::string& bwt);
 
-    /**
-     * @brief Busca si existe un patrón exacto dentro del FM-Index construido.
-     * 
-     * @param bwt Cadena BWT.
-     * @param tabla_inicio_caracter Tabla C.
-     * @param tabla_ocurrencias Tabla Occ.
-     * @param patron Patrón a buscar.
-     * @return true Si existe al menos una coincidencia exacta.
-     * @return false Si no existe coincidencia exacta.
-     */
-    static bool existePatronExactoEnFmIndex(
-        const std::string& bwt,
-        const std::map<char, int>& tabla_inicio_caracter,
-        const std::map<char, std::vector<int>>& tabla_ocurrencias,
-        const std::string& patron
-    );
-
-    /**
-     * @struct ContadorCoincidencias
-     * @brief Almacena conteos de coincidencias exactas y variantes de capitalización.
-     */
-    struct ContadorCoincidencias {
-        int coincidencias_exactas = 0;                ///< Coincidencias exactas.
-        int coincidencias_capitalizacion = 0;         ///< Coincidencias por variaciones de capitalización.
-    };
-
-    /**
-     * @brief Cuenta las coincidencias exactas y variantes de capitalización en el texto.
-     * 
-     * @param texto Texto completo.
-     * @param patron Patrón original.
-     * @return ContadorCoincidencias Estructura con conteos de coincidencias.
-     */
-    static ContadorCoincidencias contarCoincidenciasPatron(const std::string& texto, const std::string& patron);
+    // Miembros de instancia
+    std::string texto_;
+    std::vector<int> arreglo_sufijos_;
+    std::string bwt_;
+    std::map<char, int> tabla_inicio_caracter_;
+    std::map<char, std::vector<int>> tabla_ocurrencias_;
 };

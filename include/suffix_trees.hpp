@@ -1,32 +1,38 @@
 #pragma once
 
 #include "definiciones.hpp"
+#include "class_base.hpp"
 #include <list>
-#include <string>
+#include <memory>
+#include <unordered_map>
 
-class SuffixTrees {
+class SuffixTrees: public BaseStructure {
     public:
+
+        SuffixTrees(const std::string& texto);
+        ~SuffixTrees();
+
         /**
-         * @brief Busca un patrón en un archivo utilizando el algoritmo de Suffix Trees.
+         * @brief Busca un patrón en un texto utilizando el algoritmo de Suffix Trees.
          * 
-         * @param nombre_archivo Nombre del archivo donde se realizará la búsqueda.
-         * @param patron Patrón a buscar en el archivo.
-         * @return true Si el patrón se encuentra en el archivo.
+         * @param texto Texto donde se realizará la búsqueda.
+         * @param patron Patrón a buscar en el texto.
+         * @return cantidad de ocurrencias encontradas en el texto.
          */
-        static bool buscar(const fs::path& nombre_archivo, const std::string& patron);
+        unsigned int buscar(const std::string& patron) const override;
 
-        
-    private:        
-        class Node {
-            private:
-                Node* children[256];
-                std::list<int>* ind;
-            
-            public:
-                Node();
-                void insertSuffix(const std::string& suffix, int index);
-                std::list<int>* search(const std::string& pat) const;
-                ~Node();
-        };
+        private:
+            class Node {
+                public:
+                    Node();
+                    void insertSuffix(const std::string& texto, size_t posicion_texto, int index);
+                    const std::list<int>* search(const std::string& patron, size_t posicion) const;
+                    ~Node();
+
+                private:
+                    std::unique_ptr<std::list<int>> ind;
+                    std::vector<std::unique_ptr<Node>> children;
+            };
+
+            std::unique_ptr<Node> root;
 };
-
