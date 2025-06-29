@@ -7,9 +7,14 @@
 #include "../include/robin_karp.hpp"
 #include "../include/suffix_trees.hpp"
 #include "../include/suffix_arrays.hpp"
+#include "../include/json.hpp"
+#include "../include/medidor.hpp"
 
-#include <chrono>
+#include <set>
 #include <functional>
+#include <memory>
+
+using json = nlohmann::json;
 
 int main() {
     std::string texto, patron;
@@ -21,6 +26,8 @@ int main() {
         return 0;
     }
 
+    std::vector<unsigned int> ocurrencias_totales;
+
     // Vector de algoritmos de búsqueda de patrones a probar
     std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
         {"BoyerMoore", BoyerMoore::buscar},
@@ -28,81 +35,36 @@ int main() {
         {"RobinKarp", RobinKarp::buscar},
     };
 
-    std::vector<
-        std::pair<
-            std::string, 
-            std::function<std::unique_ptr<BaseStructure>(const std::string&)>
-        >
-    > algoritmos_estructura = {
-        {
-            "FMIndex",
-            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
-                return std::make_unique<FMIndex>(texto); 
-            }
-        },
-        {
-            "SuffixArrays",
-            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
-                return std::make_unique<SuffixArrays>(texto); 
-            }
-        },
-        {
-            "SuffixTrees", 
-            [](const std::string& texto) -> std::unique_ptr<BaseStructure> { 
-                return std::make_unique<SuffixTrees>(texto); 
-            }
-        }
-    };
-
     for (const auto& alg : algoritmos) {
-        imprimir("\nProbando algoritmo: " << AZUL << alg.first << RESET_COLOR);
-
-        try {
-            auto start = std::chrono::high_resolution_clock::now();
-            unsigned int resultado = alg.second(texto, patron);
-            auto end = std::chrono::high_resolution_clock::now();
-
-            if (resultado > 0) imprimir(VERDE "Patron encontrado " BLANCO << resultado << " veces." RESET_COLOR);
-            else imprimir(MAGENTA "Patron no encontrado." RESET_COLOR);
-
-            // Tiempo en milisegundos
-            auto duracion_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-            imprimir(AMARILLO "Tiempo: " CIAN << duracion_ms << " ms" RESET_COLOR);
-        }
-        catch (const std::exception& e) {
-            imprimir(ROJO "Error en " << alg.first << ": " RESET_COLOR << e.what());
-        }
+        unsigned int ocurrencias = medir_algoritmo(alg.first, alg.second, texto, patron);
+        ocurrencias_totales.push_back(ocurrencias);
     }
 
-    // Prueba con algoritmos de estructura
-    for (const auto& alg : algoritmos_estructura) {
-        imprimir("\nProbando estructura: " << AZUL << alg.first << RESET_COLOR);
+    std::vector<
+    std::pair<
+        std::string,
+        std::function<std::unique_ptr<BaseStructure>(const std::string&)>
+    >
+        > estructuras = {
+            {"FMIndex",      [](const std::string& texto) { return std::make_unique<FMIndex>(texto); }},
+            {"SuffixArrays", [](const std::string& texto) { return std::make_unique<SuffixArrays>(texto); }},
+            {"SuffixTrees",  [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); }},
+        };
 
-        try {
-            
-            // Construcción
-            auto start = std::chrono::high_resolution_clock::now();
-            auto estructura = alg.second(texto);
-            auto end = std::chrono::high_resolution_clock::now();
-
-            imprimir(AMARILLO "Tiempo de construccion: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
-
-            // Búsqueda
-            start = std::chrono::high_resolution_clock::now();
-            unsigned int resultado = estructura->buscar(patron);
-            end = std::chrono::high_resolution_clock::now();
-
-            if (resultado > 0) 
-                imprimir(VERDE "Patron encontrado " BLANCO << resultado << " veces." RESET_COLOR);
-            else 
-                imprimir(MAGENTA "Patron no encontrado." RESET_COLOR);
-
-            imprimir(ROJO "Tiempo de busqueda: " CIAN << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << " ms" RESET_COLOR);
+        for (const auto& est : estructuras) {
+            unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
+            ocurrencias_totales.push_back(ocurrencias);
         }
-        catch (const std::exception& e) {
-            imprimir(ROJO "Error en " << std::get<0>(alg) << ": " RESET_COLOR << e.what());
-        }
-    }
-    
+
+    std::set<unsigned int> ocurrencias_unicas(ocurrencias_totales.begin(), ocurrencias_totales.end());
+
+    size_t memoria_maxima_kb = obtener_memoria_maxima_kb();
+
+    guardar_resultados_finales(
+        patron,
+        (ocurrencias_unicas.size() == 1) ? *ocurrencias_unicas.begin() : 0,
+        memoria_maxima_kb
+    );
+
     return 0;
 }
