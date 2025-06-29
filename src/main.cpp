@@ -41,20 +41,20 @@ int main() {
     }
 
     std::vector<
-    std::pair<
-        std::string,
-        std::function<std::unique_ptr<BaseStructure>(const std::string&)>
-    >
-        > estructuras = {
-            {"FMIndex",      [](const std::string& texto) { return std::make_unique<FMIndex>(texto); }},
-            {"SuffixArrays", [](const std::string& texto) { return std::make_unique<SuffixArrays>(texto); }},
-            {"SuffixTrees",  [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); }},
-        };
+        std::pair<
+            std::string,
+            std::function<std::unique_ptr<BaseStructure>(const std::string&)>
+        >
+    > estructuras = {
+        {"FMIndex",      [](const std::string& texto) { return std::make_unique<FMIndex>(texto); }},
+        {"SuffixArrays", [](const std::string& texto) { return std::make_unique<SuffixArrays>(texto); }},
+        {"SuffixTrees",  [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); }},
+    };
 
-        for (const auto& est : estructuras) {
-            unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
-            ocurrencias_totales.push_back(ocurrencias);
-        }
+    for (const auto& est : estructuras) {
+        unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
+        ocurrencias_totales.push_back(ocurrencias);
+    }
 
     std::set<unsigned int> ocurrencias_unicas(ocurrencias_totales.begin(), ocurrencias_totales.end());
 
