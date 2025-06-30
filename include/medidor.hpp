@@ -82,11 +82,12 @@ void guardar_resultado();
 
 /**
  * @brief Guarda todos los resultados en un archivo JSON y muestra la memoria total acumulada.
+ * @param nombre_archivo Nombre del archivo en que se buscara el patron
  * @param patron Patrón que se buscó.
  * @param ocurrencias Total de ocurrencias encontradas.
  * @param memoria_maxima_kb Memoria máxima usada (no usada en esta versión, pero se mantiene el parámetro).
  */
-void guardar_resultados_finales(const std::string& patron, unsigned int ocurrencias, size_t memoria_maxima_kb);
+void guardar_resultados_finales(const std::string& nombre_archivo, const std::string& patron, unsigned int ocurrencias, size_t memoria_maxima_kb);
 
 /**
  * @brief Ejecuta y mide un algoritmo de búsqueda.

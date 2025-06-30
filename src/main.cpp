@@ -13,20 +13,49 @@
 #include <set>
 #include <functional>
 #include <memory>
+#include <sstream>
 
 using json = nlohmann::json;
 
-int main() {
-    std::string texto, patron;
+#define NOMBRE_CARPETA_TESTS fs::path("test/textos")
 
-    input(texto, patron);
+/**
+ * @brief Función encargada de obtener todos los archivos .bin de una determinada carpeta
+ * @return Retorna los nombres de los archivos 
+ */
+std::vector<fs::path> archivosEnCarpeta() {
+    std::vector<fs::path> nombres_archivos;
 
-    if (texto.empty()) {
-        imprimir(AMARILLO "No hay contenido en el archivo" RESET_COLOR);
-        return 0;
+    try {
+        if (!std::filesystem::exists(NOMBRE_CARPETA_TESTS)) {
+            throw std::runtime_error("La carpeta no existe: " + NOMBRE_CARPETA_TESTS.string());
+        }
+
+        if (!std::filesystem::is_directory(NOMBRE_CARPETA_TESTS)) {
+            throw std::runtime_error("La ruta no es una carpeta: " + NOMBRE_CARPETA_TESTS.string());
+        }
+
+        for (const auto &entrada : std::filesystem::directory_iterator(NOMBRE_CARPETA_TESTS)) {
+            if (std::filesystem::is_regular_file(entrada)) {
+                if (entrada.path().extension() == ".txt") {
+                    nombres_archivos.push_back(entrada.path().filename());
+                }
+            }
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "Error al listar archivos: " << e.what() << std::endl;
+        return {}; // Vector vacio
     }
 
-    std::vector<unsigned int> ocurrencias_totales;
+    return nombres_archivos;
+}
+
+int main() {
+    std::string texto, patron;
+    solicitarPatron(patron);
+
+    // Archivos en que se buscara el patron
+    std::vector<fs::path> nombres_archivos = archivosEnCarpeta();
 
     // Vector de algoritmos de búsqueda de patrones a probar
     std::vector<std::pair<std::string, unsigned int(*)(const std::string&, const std::string&)>> algoritmos = {
@@ -34,11 +63,6 @@ int main() {
         {"KnuthMorrisPratt", KnuthMorrisPratt::buscar},
         {"RobinKarp", RobinKarp::buscar},
     };
-
-    for (const auto& alg : algoritmos) {
-        unsigned int ocurrencias = medir_algoritmo(alg.first, alg.second, texto, patron);
-        ocurrencias_totales.push_back(ocurrencias);
-    }
 
     std::vector<
         std::pair<
@@ -51,20 +75,53 @@ int main() {
         {"SuffixTrees",  [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); }},
     };
 
-    for (const auto& est : estructuras) {
-        unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
-        ocurrencias_totales.push_back(ocurrencias);
+    for (auto nombre_archivo : nombres_archivos) {
+        try {
+            fs::path archivo_archivo_completo = NOMBRE_CARPETA_TESTS / nombre_archivo;
+
+            // Carga del texto del archivo
+            std::ifstream archivo(archivo_archivo_completo, std::ios::in);
+            if (!archivo.is_open()) {
+                throw std::ios_base::failure("No se pudo abrir el archivo: " + archivo_archivo_completo.string());
+            }
+    
+            std::stringstream buffer;
+            buffer << archivo.rdbuf();
+            texto = buffer.str();
+            
+            if (texto.empty()) {
+                imprimir(AMARILLO "No hay contenido en el archivo: " RESET_COLOR << archivo_archivo_completo.string());
+                continue;
+            }
+    
+            // TEST
+            std::vector<unsigned int> ocurrencias_totales;
+    
+            for (const auto& alg : algoritmos) {
+                unsigned int ocurrencias = medir_algoritmo(alg.first, alg.second, texto, patron);
+                ocurrencias_totales.push_back(ocurrencias);
+            }
+    
+            for (const auto& est : estructuras) {
+                unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
+                ocurrencias_totales.push_back(ocurrencias);
+            }
+    
+            std::set<unsigned int> ocurrencias_unicas(ocurrencias_totales.begin(), ocurrencias_totales.end());
+    
+            size_t memoria_maxima_kb = obtener_memoria_maxima_kb();
+    
+            guardar_resultados_finales(
+                nombre_archivo.stem().string(),
+                patron,
+                (ocurrencias_unicas.size() == 1) ? *ocurrencias_unicas.begin() : 0,
+                memoria_maxima_kb
+            ); 
+        }
+        catch (const std::exception &e) {
+            std::cerr << "Error al realizar los tests: " << e.what() << std::endl;
+        }
     }
-
-    std::set<unsigned int> ocurrencias_unicas(ocurrencias_totales.begin(), ocurrencias_totales.end());
-
-    size_t memoria_maxima_kb = obtener_memoria_maxima_kb();
-
-    guardar_resultados_finales(
-        patron,
-        (ocurrencias_unicas.size() == 1) ? *ocurrencias_unicas.begin() : 0,
-        memoria_maxima_kb
-    );
 
     return 0;
 }

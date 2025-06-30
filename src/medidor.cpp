@@ -1,3 +1,4 @@
+#include "../include/definiciones.hpp"
 #include "../include/medidor.hpp"
 
 #include <mutex>
@@ -15,6 +16,8 @@
 #endif
 
 using json = nlohmann::json;
+
+#define NOMBRE_CARPETA_JSON fs::path("test/json")
 
 static json resultados_array = json::array();
 static json resultado_actual;
@@ -103,7 +106,19 @@ void guardar_resultado() {
     resultado_actual = json::object();
 }
 
-void guardar_resultados_finales(const std::string& patron, unsigned int ocurrencias, size_t /*memoria_maxima_kb*/) {
+void validar_carpeta_guardado() {
+    if (!std::filesystem::exists(NOMBRE_CARPETA_JSON)) {
+        if(!std::filesystem::create_directory(NOMBRE_CARPETA_JSON)){
+            throw std::runtime_error("La carpeta no pudo ser creada: " + NOMBRE_CARPETA_JSON.string());
+        }
+    }
+
+    if (!std::filesystem::is_directory(NOMBRE_CARPETA_JSON)) {
+        throw std::runtime_error("La ruta para guardar los tests ya existe y no es una carpeta: " + NOMBRE_CARPETA_JSON.string());
+    }
+}
+
+void guardar_resultados_finales(const std::string& nombre_archivo, const std::string& patron, unsigned int ocurrencias, size_t /*memoria_maxima_kb*/) {
     std::lock_guard<std::mutex> lock(mtx);
 
     std::string clave = "patron: " + patron
@@ -113,11 +128,18 @@ void guardar_resultados_finales(const std::string& patron, unsigned int ocurrenc
     json salida;
     salida[clave] = resultados_array;
 
-    std::ofstream out("resultados.json");
-    if (!out) {
-        std::cerr << "Error abriendo archivo resultados.json para escritura\n";
-        return;
+    try {
+        validar_carpeta_guardado();
+    } catch (const std::exception &e) {
+        throw e;
     }
+
+    fs::path archivo = NOMBRE_CARPETA_JSON / (nombre_archivo + ".json");
+    std::ofstream out(archivo);
+    if (!out) {
+        throw std::runtime_error("Error abriendo archivo " + archivo.string() + " para escritura\n");
+    }
+
     out << std::setw(4) << salida << std::endl;
     out.close();
 
