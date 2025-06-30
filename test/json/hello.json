@@ -1,0 +1,76 @@
+{
+    "patron: la, ocurrencias: 1, memoria_total_usada_kb: 0": [
+        {
+            "Nombre": "BoyerMoore",
+            "Tipo": "Algoritmo",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 0,
+            "memoria_construccion_inicio_kb": 0,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.000275,
+            "tiempo_construccion_mili": 0.0
+        },
+        {
+            "Nombre": "KnuthMorrisPratt",
+            "Tipo": "Algoritmo",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 0,
+            "memoria_construccion_inicio_kb": 0,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.002291,
+            "tiempo_construccion_mili": 0.0
+        },
+        {
+            "Nombre": "RobinKarp",
+            "Tipo": "Algoritmo",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 0,
+            "memoria_construccion_inicio_kb": 0,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.000917,
+            "tiempo_construccion_mili": 0.0
+        },
+        {
+            "Nombre": "FMIndex",
+            "Tipo": "Estructura",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 3584,
+            "memoria_construccion_inicio_kb": 3584,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.001558,
+            "tiempo_construccion_mili": 0.01265
+        },
+        {
+            "Nombre": "SuffixArrays",
+            "Tipo": "Estructura",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 3584,
+            "memoria_construccion_inicio_kb": 3584,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.000642,
+            "tiempo_construccion_mili": 0.004125
+        },
+        {
+            "Nombre": "SuffixTrees",
+            "Tipo": "Estructura",
+            "memoria_busqueda_fin_kb": 3584,
+            "memoria_busqueda_inicio_kb": 3584,
+            "memoria_busqueda_usada_kb": 0,
+            "memoria_construccion_fin_kb": 3584,
+            "memoria_construccion_inicio_kb": 3584,
+            "memoria_construccion_usada_kb": 0,
+            "tiempo_busqueda_mili": 0.000275,
+            "tiempo_construccion_mili": 0.112567
+        }
+    ]
+}
