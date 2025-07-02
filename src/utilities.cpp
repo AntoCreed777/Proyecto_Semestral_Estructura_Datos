@@ -1,9 +1,11 @@
 #include "../include/definiciones.hpp"
 #include "../include/utilities.hpp"
 
-#include <cstring>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 fs::path solicitarArchivo() {
     fs::path nombre_archivo;

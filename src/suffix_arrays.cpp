@@ -1,8 +1,6 @@
 #include "../include/definiciones.hpp"
 #include "../include/suffix_arrays.hpp"
 
-#include <algorithm>
-
 SuffixArrays::SuffixArrays(const std::string& texto) {
     // String aux
     for (auto it = texto.begin(); it != texto.end(); ++it) {

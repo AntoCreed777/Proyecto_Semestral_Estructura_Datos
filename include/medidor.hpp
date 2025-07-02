@@ -9,8 +9,7 @@
  * @date 2025
  */
 
-#ifndef MEDIDOR_HPP
-#define MEDIDOR_HPP
+#pragma once
 
 #include "definiciones.hpp"
 #include "json.hpp"
@@ -21,10 +20,8 @@
 #include "boyer_moore.hpp"
 #include "knuth_morris_pratt.hpp"
 
-#include <string>
 #include <chrono>
 #include <functional>
-#include <memory>
 
 /**
  * @brief Obtiene la memoria usada actualmente por el proceso en KB.
@@ -121,5 +118,3 @@ unsigned int medir_algoritmo(const std::string& nombre, unsigned int(*func)(cons
  */
 unsigned int medir_estructura(const std::string& nombre, std::function<std::unique_ptr<BaseStructure>(const std::string&)> constructor,
                              const std::string& texto, const std::string& patron);
-
-#endif

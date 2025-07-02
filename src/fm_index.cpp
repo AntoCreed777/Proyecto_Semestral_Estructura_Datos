@@ -1,6 +1,9 @@
 #include "../include/definiciones.hpp"
 #include "../include/fm_index.hpp"
 
+#include <map>
+#include <unordered_set>
+
 /**
  * @brief Constructor que inicializa la estructura FM-Index con el texto dado.
  *        Utiliza el texto para construir las estructuras necesarias (BWT, tablas).

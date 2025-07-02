@@ -1,7 +1,5 @@
 #include "../include/definiciones.hpp"
 #include "../include/boyer_moore.hpp"
-#include <string>
-#include <iostream>
 
 unsigned int BoyerMoore::buscar(const std::string& texto, const std::string& patron) {
     int tamanio_patron = patron.length(), tamanio_texto = texto.length();

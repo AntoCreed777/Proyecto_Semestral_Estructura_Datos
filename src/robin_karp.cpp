@@ -1,6 +1,8 @@
 #include "../include/definiciones.hpp"
 #include "../include/robin_karp.hpp"
 
+#include <cctype>
+
 /**
  * @brief Genera todas las variaciones de capitalización posibles de un patrón.
  * 

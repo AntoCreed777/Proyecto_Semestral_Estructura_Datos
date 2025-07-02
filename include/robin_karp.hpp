@@ -1,7 +1,3 @@
-#pragma once
-
-#include "definiciones.hpp"
-
 /**
  * @file robin_karp.hpp
  * @brief Implementación del algoritmo de búsqueda Rabin-Karp con variaciones de capitalización.

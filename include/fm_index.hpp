@@ -14,6 +14,9 @@
 #include "definiciones.hpp"
 #include "class_base.hpp"
 
+#include <unordered_set>
+#include <map>
+
 /**
  * @class FMIndex
  * @brief Implementación de búsqueda de patrones mediante FM-Index con soporte

@@ -3,9 +3,11 @@
 
 #include <mutex>
 #include <set>
-#include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #ifdef _WIN32
 #include <windows.h>

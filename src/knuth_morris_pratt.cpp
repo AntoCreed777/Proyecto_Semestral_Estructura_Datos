@@ -1,6 +1,5 @@
 #include "../include/definiciones.hpp"
 #include "../include/knuth_morris_pratt.hpp"
-#include <fstream>
 
 unsigned int KnuthMorrisPratt::buscar(const std::string& texto, const std::string& patron) {
     vc tabla_de_saltos = calcular_tabla_de_saltos(patron);

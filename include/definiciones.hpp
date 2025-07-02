@@ -22,16 +22,17 @@
 #include <vector>
 #include <utility> // Para std::pair
 #include <limits>
-#include <filesystem>
-#include <fstream>
 #include <string>
-#include <cctype>
-#include <unordered_set>
-#include <map>
 #include <algorithm>
-#include <iterator>
 
-namespace fs = std::filesystem;
+// Includes condicionales para archivos específicos
+// <filesystem> - solo para main.cpp, utilities.cpp y medidor.cpp
+// <fstream> - solo para archivos que leen/escriben archivos
+// <cctype> - solo para robin_karp.cpp
+// <map> - solo para fm_index.cpp
+// <unordered_set> - solo para fm_index.cpp (comentado)
+
+// Nota: namespace fs = std::filesystem; debe definirse en cada archivo que use <filesystem>
 
 typedef std::vector<int> vc;
 typedef std::pair<int, int> par;

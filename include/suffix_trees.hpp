@@ -12,9 +12,9 @@
 
 #include "definiciones.hpp"
 #include "class_base.hpp"
+
 #include <list>
 #include <memory>
-#include <unordered_map>
 
 /**
  * @class SuffixTrees
