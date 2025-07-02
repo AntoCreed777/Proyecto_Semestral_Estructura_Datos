@@ -209,33 +209,33 @@ Proyecto_Semestral_Estructura_Datos/
 El proyecto utiliza diferentes configuraciones de compilación:
 
 ```makefile
-# Para desarrollo y debugging
+# Para desarrollo y debugging (por defecto)
 make clean && make
 
-# Para producción optimizada
-make clean && make CXXFLAGS="$(CXXFLAGS_RELEASE)"
+# Para cambiar a compilación optimizada:
+# Editar Makefile línea 13: CXXFLAGS = $(CXXFLAGS_RELEASE)
 ```
 
 > [!WARNING]
-> La compilación optimizada (`CXXFLAGS_RELEASE`) puede hacer que el debugging sea más difícil. Usa la versión debug durante el desarrollo.
+> La compilación optimizada puede hacer que el debugging sea más difícil. Usa la versión debug durante el desarrollo.
 
 ## 🏗️ Compilación
 
 ### Comandos Básicos
 
 ```bash
-# Compilación estándar (debug)
+# Compilación estándar
 make
 
 # Compilación limpia
 make clean && make
 
-# Compilación optimizada para producción
-make clean && make CXXFLAGS="$(CXXFLAGS_RELEASE)"
-
 # Solo limpiar archivos objeto
 make clean
 ```
+
+> [!TIP]
+> **Para compilación optimizada:** Edita el `Makefile` y cambia la línea 13 de `CXXFLAGS = $(CXXFLAGS_DEBUG)` a `CXXFLAGS = $(CXXFLAGS_RELEASE)`.
 
 ### Opciones de Compilación
 
