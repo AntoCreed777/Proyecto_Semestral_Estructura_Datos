@@ -73,10 +73,10 @@ std::unordered_set<std::string> FMIndex::generarVariacionesCapitalizacion(const 
 /**
  * @brief Construye el arreglo de sufijos del texto.
  */
-std::vector<int> FMIndex::construirArregloSufijos(const std::string& texto) {
+vc FMIndex::construirArregloSufijos(const std::string& texto) {
     int longitud = static_cast<int>(texto.size());
-    std::vector<int> arreglo_sufijos(longitud);
-    for (int i = 0; i < longitud; i++) {
+    vc arreglo_sufijos(longitud);
+    rep(i, longitud) {
         arreglo_sufijos[i] = i;
     }
 
@@ -92,7 +92,7 @@ std::vector<int> FMIndex::construirArregloSufijos(const std::string& texto) {
 /**
  * @brief Construye la BWT (Burrows-Wheeler Transform) desde el arreglo de sufijos.
  */
-std::string FMIndex::construirTransformadaBWT(const std::string& texto, const std::vector<int>& arreglo_sufijos) {
+std::string FMIndex::construirTransformadaBWT(const std::string& texto, const vc& arreglo_sufijos) {
     std::string bwt(texto.size(), '$');
     for (size_t i = 0; i < arreglo_sufijos.size(); ++i) {
         int indice_sufijo = arreglo_sufijos[i];
@@ -122,12 +122,12 @@ std::map<char, int> FMIndex::construirTablaInicioCaracter(const std::string& bwt
 /**
  * @brief Construye la tabla de ocurrencias acumuladas por carácter.
  */
-std::map<char, std::vector<int>> FMIndex::construirTablaOcurrencias(const std::string& bwt) {
-    std::map<char, std::vector<int>> tabla_ocurrencias;
+mcharvc FMIndex::construirTablaOcurrencias(const std::string& bwt) {
+    mcharvc tabla_ocurrencias;
 
     for (char caracter : bwt) {
         if (!tabla_ocurrencias.count(caracter)) {
-            tabla_ocurrencias[caracter] = std::vector<int>(bwt.size(), 0);
+            tabla_ocurrencias[caracter] = vc(bwt.size(), 0);
         }
     }
 
@@ -135,7 +135,7 @@ std::map<char, std::vector<int>> FMIndex::construirTablaOcurrencias(const std::s
         char caracter_actual = bwt[i];
         for (auto& par : tabla_ocurrencias) {
             char clave = par.first;
-            std::vector<int>& conteos = par.second;
+            vc& conteos = par.second;
             conteos[i] = (i > 0 ? conteos[i - 1] : 0) + (clave == caracter_actual ? 1 : 0);
         }
     }

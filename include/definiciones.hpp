@@ -24,6 +24,7 @@
 #include <limits>
 #include <string>
 #include <algorithm>
+#include <map> // Para typedef mcharvc
 
 // Includes condicionales para archivos específicos
 // <filesystem> - solo para main.cpp, utilities.cpp y medidor.cpp
@@ -35,16 +36,19 @@
 // Nota: namespace fs = std::filesystem; debe definirse en cada archivo que use <filesystem>
 
 typedef std::vector<int> vc;
+typedef std::vector<std::string> vs;
 typedef std::pair<int, int> par;
+typedef std::map<char, vc> mcharvc;   // Para mapas de char a vector<int> (usado en fm_index)
 
 #define rep(i,n) for(int i=0;i<(int)n;i++)
-#define repx(i,x,n) for(int i=x;i<(int)n;i++)
-#define invrep(i,n) for(int i=n;i>=0;i--)
-#define pb push_back
 #define imprimir(mensaje) std::cout << mensaje << std::endl
 
-#define INF std::numeric_limits<int>::max()
-#define NEG_INF std::numeric_limits<int>::min()
+// ========== ELEMENTOS COMENTADOS (NO UTILIZADOS ACTUALMENTE) ==========
+// Descomentar solo si se necesitan en futuras implementaciones:
+// #define repx(i,x,n) for(int i=x;i<(int)n;i++)    // Bucle con inicio personalizado
+// #define invrep(i,n) for(int i=n;i>=0;i--)        // Bucle inverso
+// #define INF std::numeric_limits<int>::max()       // Valor infinito positivo
+// #define NEG_INF std::numeric_limits<int>::min()   // Valor infinito negativo
 
 //Constantes para manejar colores
 #define ROJO        "\033[0;31m"

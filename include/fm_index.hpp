@@ -81,9 +81,9 @@ private:
      * @brief Construye el arreglo de sufijos de un texto.
      * 
      * @param texto Texto fuente.
-     * @return std::vector<int> Vector con los índices del arreglo de sufijos.
+     * @return vc Vector con los índices del arreglo de sufijos.
      */
-    static std::vector<int> construirArregloSufijos(const std::string& texto);
+    static vc construirArregloSufijos(const std::string& texto);
 
     /**
      * @brief Construye la transformada de Burrows-Wheeler (BWT) a partir del texto y su arreglo de sufijos.
@@ -92,7 +92,7 @@ private:
      * @param arreglo_sufijos Arreglo de sufijos construido sobre el texto.
      * @return std::string Cadena resultante de la BWT.
      */
-    static std::string construirTransformadaBWT(const std::string& texto, const std::vector<int>& arreglo_sufijos);
+    static std::string construirTransformadaBWT(const std::string& texto, const vc& arreglo_sufijos);
 
     /**
      * @brief Construye la tabla de inicio por carácter (tabla C) a partir de la BWT.
@@ -108,12 +108,12 @@ private:
      * @param bwt Cadena BWT.
      * @return Tabla de ocurrencias.
      */
-    static std::map<char, std::vector<int>> construirTablaOcurrencias(const std::string& bwt);
+    static mcharvc construirTablaOcurrencias(const std::string& bwt);
 
     // Miembros de instancia
     std::string texto_;
-    std::vector<int> arreglo_sufijos_;
+    vc arreglo_sufijos_;
     std::string bwt_;
     std::map<char, int> tabla_inicio_caracter_;
-    std::map<char, std::vector<int>> tabla_ocurrencias_;
+    mcharvc tabla_ocurrencias_;
 };

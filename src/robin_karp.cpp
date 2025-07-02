@@ -15,7 +15,7 @@ void RobinKarp::generarVariacionesCapitalizacion(
     const std::string& patron,
     int posicion,
     std::string& buffer_actual,
-    std::vector<std::string>& variaciones_capitalizacion)
+    vs& variaciones_capitalizacion)
 {
     if (posicion == static_cast<int>(patron.size())) {
         variaciones_capitalizacion.push_back(buffer_actual);
@@ -62,11 +62,11 @@ unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patr
     auto contarCoincidenciasPatron = [&](const std::string& patron_busqueda) -> int {
         int hash_patron = 0, hash_ventana = 0, factor_potencia = 1;
 
-        for (int i = 0; i < longitud_patron - 1; i++) {
+        rep(i, longitud_patron - 1) {
             factor_potencia = (factor_potencia * BASE_HASH) % MODULO_HASH;
         }
 
-        for (int i = 0; i < longitud_patron; i++) {
+        rep(i, longitud_patron) {
             hash_patron = (BASE_HASH * hash_patron + patron_busqueda[i]) % MODULO_HASH;
             hash_ventana = (BASE_HASH * hash_ventana + texto[i]) % MODULO_HASH;
         }
@@ -93,7 +93,7 @@ unsigned int RobinKarp::buscar(const std::string& texto, const std::string& patr
 
     /*
     // Generar todas las variaciones de capitalización
-    std::vector<std::string> variaciones_capitalizacion;
+    vs variaciones_capitalizacion;
     std::string buffer_actual = patron;
     generarVariacionesCapitalizacion(patron, 0, buffer_actual, variaciones_capitalizacion);
 

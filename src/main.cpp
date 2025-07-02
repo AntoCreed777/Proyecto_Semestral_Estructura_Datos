@@ -55,7 +55,7 @@ std::vector<fs::path> archivosEnCarpeta() {
     return nombres_archivos;
 }
 
-int main() {
+int main() {    
     std::string texto, patron;
     solicitarPatron(patron);
 
