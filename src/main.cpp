@@ -55,7 +55,7 @@ std::vector<fs::path> archivosEnCarpeta() {
     return nombres_archivos;
 }
 
-int main() {    
+int main() {
     std::string texto, patron;
     solicitarPatron(patron);
 
@@ -105,22 +105,22 @@ int main() {
                 std::vector<unsigned int> ocurrencias_totales;
     
                 for (const auto& alg : algoritmos) {
-                    unsigned int ocurrencias = medir_algoritmo(alg.first, alg.second, texto, patron);
+                    unsigned int ocurrencias = medirAlgoritmo(alg.first, alg.second, texto, patron);
                     ocurrencias_totales.push_back(ocurrencias);
                 }
     
                 for (const auto& est : estructuras) {
-                    unsigned int ocurrencias = medir_estructura(est.first, est.second, texto, patron);
+                    unsigned int ocurrencias = medirEstructura(est.first, est.second, texto, patron);
                     ocurrencias_totales.push_back(ocurrencias);
                 }
     
                 std::set<unsigned int> ocurrencias_unicas(ocurrencias_totales.begin(), ocurrencias_totales.end());
     
-                size_t memoria_maxima_kb = obtener_memoria_maxima_kb();
+                size_t memoria_maxima_kb = obtenerMemoriaMaximaKb();
                 
                 std::string nombre_final_json = nombre_archivo.stem().string() + "_" + std::to_string(contador);
 
-                guardar_resultados_finales(
+                guardarResultadosFinales(
                     nombre_final_json,
                     patron,
                     (ocurrencias_unicas.size() == 1) ? *ocurrencias_unicas.begin() : 0,

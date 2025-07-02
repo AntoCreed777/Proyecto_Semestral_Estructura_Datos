@@ -2,7 +2,7 @@
 #include "../include/knuth_morris_pratt.hpp"
 
 unsigned int KnuthMorrisPratt::buscar(const std::string& texto, const std::string& patron) {
-    vc tabla_de_saltos = calcular_tabla_de_saltos(patron);
+    vc tabla_de_saltos = calcularTablaDeSaltos(patron);
 
     size_t posicion_patron = 0;
     unsigned int ocurrencias = 0;
@@ -26,7 +26,7 @@ unsigned int KnuthMorrisPratt::buscar(const std::string& texto, const std::strin
     return ocurrencias;   // Retorna la cantidad de ocurrencias encontradas
 }
 
-vc KnuthMorrisPratt::calcular_tabla_de_saltos(const std::string& patron) {
+vc KnuthMorrisPratt::calcularTablaDeSaltos(const std::string& patron) {
     vc tabla_de_saltos(patron.size(), 0);
     size_t j = 0; // Índice para el prefijo más largo
 

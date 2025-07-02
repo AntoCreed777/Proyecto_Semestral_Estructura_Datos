@@ -71,5 +71,5 @@ class KnuthMorrisPratt {
          * - Tiempo: O(m) donde m es el tamaño del patrón
          * - Espacio: O(m) para el vector resultante
          */
-        static vc calcular_tabla_de_saltos(const std::string& patron);
+        static vc calcularTablaDeSaltos(const std::string& patron);
 };

@@ -30,11 +30,11 @@ static std::string medicion_patron;
 static std::mutex mtx;
 static size_t memoria_acumulada_kb = 0;
 
-static void acumular_memoria(size_t mem_usada) {
+static void acumularMemoria(size_t mem_usada) {
     memoria_acumulada_kb += mem_usada;
 }
 
-size_t get_memory_usage() {
+size_t getMemoryUsage() {
 #ifdef _WIN32
     PROCESS_MEMORY_COUNTERS_EX pmc;
     if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
@@ -50,26 +50,26 @@ size_t get_memory_usage() {
 #endif
 }
 
-std::chrono::high_resolution_clock::time_point iniciar_timer() {
+std::chrono::high_resolution_clock::time_point iniciarTimer() {
     return std::chrono::high_resolution_clock::now();
 }
 
-std::chrono::high_resolution_clock::time_point detener_timer() {
+std::chrono::high_resolution_clock::time_point detenerTimer() {
     return std::chrono::high_resolution_clock::now();
 }
 
-std::chrono::duration<double, std::milli> calcular_duracion(
+std::chrono::duration<double, std::milli> calcularDuracion(
     std::chrono::high_resolution_clock::time_point inicio,
     std::chrono::high_resolution_clock::time_point fin
 ) {
     return std::chrono::duration<double, std::milli>(fin - inicio);
 }
 
-size_t obtener_memoria_maxima_kb() {
-    return get_memory_usage();
+size_t obtenerMemoriaMaximaKb() {
+    return getMemoryUsage();
 }
 
-void iniciar_medicion(const std::string& nombre, const std::string& tipo, const std::string& patron) {
+void iniciarMedicion(const std::string& nombre, const std::string& tipo, const std::string& patron) {
     std::lock_guard<std::mutex> lock(mtx);
     medicion_nombre = nombre;
     medicion_tipo = tipo;
@@ -80,7 +80,7 @@ void iniciar_medicion(const std::string& nombre, const std::string& tipo, const 
     resultado_actual["Tipo"] = tipo;
 }
 
-void registrar_construccion(size_t mem_inicio, size_t mem_fin, std::chrono::duration<double, std::milli> duracion) {
+void registrarConstruccion(size_t mem_inicio, size_t mem_fin, std::chrono::duration<double, std::milli> duracion) {
     std::lock_guard<std::mutex> lock(mtx);
     resultado_actual["memoria_construccion_inicio_kb"] = mem_inicio;
     resultado_actual["memoria_construccion_fin_kb"] = mem_fin;
@@ -88,10 +88,10 @@ void registrar_construccion(size_t mem_inicio, size_t mem_fin, std::chrono::dura
     resultado_actual["memoria_construccion_usada_kb"] = usada;
     resultado_actual["tiempo_construccion_mili"] = duracion.count();
 
-    acumular_memoria(usada);
+    acumularMemoria(usada);
 }
 
-void registrar_busqueda(size_t mem_inicio, size_t mem_fin, std::chrono::duration<double, std::milli> duracion, unsigned int ocurrencias) {
+void registrarBusqueda(size_t mem_inicio, size_t mem_fin, std::chrono::duration<double, std::milli> duracion, unsigned int ocurrencias) {
     std::lock_guard<std::mutex> lock(mtx);
     resultado_actual["memoria_busqueda_inicio_kb"] = mem_inicio;
     resultado_actual["memoria_busqueda_fin_kb"] = mem_fin;
@@ -99,16 +99,16 @@ void registrar_busqueda(size_t mem_inicio, size_t mem_fin, std::chrono::duration
     resultado_actual["memoria_busqueda_usada_kb"] = usada;
     resultado_actual["tiempo_busqueda_mili"] = duracion.count();
 
-    acumular_memoria(usada);
+    acumularMemoria(usada);
 }
 
-void guardar_resultado() {
+void guardarResultado() {
     std::lock_guard<std::mutex> lock(mtx);
     resultados_array.push_back(resultado_actual);
     resultado_actual = json::object();
 }
 
-void validar_carpeta_guardado() {
+void validarCarpetaGuardado() {
     if (!std::filesystem::exists(NOMBRE_CARPETA_JSON)) {
         if(!std::filesystem::create_directory(NOMBRE_CARPETA_JSON)){
             throw std::runtime_error("La carpeta no pudo ser creada: " + NOMBRE_CARPETA_JSON.string());
@@ -120,7 +120,7 @@ void validar_carpeta_guardado() {
     }
 }
 
-void guardar_resultados_finales(const std::string& nombre_archivo, const std::string& patron, unsigned int ocurrencias, size_t /*memoria_maxima_kb*/) {
+void guardarResultadosFinales(const std::string& nombre_archivo, const std::string& patron, unsigned int ocurrencias, size_t /*memoria_maxima_kb*/) {
     std::lock_guard<std::mutex> lock(mtx);
 
     std::string clave = "patron: " + patron
@@ -131,7 +131,7 @@ void guardar_resultados_finales(const std::string& nombre_archivo, const std::st
     salida[clave] = resultados_array;
 
     try {
-        validar_carpeta_guardado();
+        validarCarpetaGuardado();
     } catch (const std::exception &e) {
         throw e;
     }
@@ -150,62 +150,62 @@ void guardar_resultados_finales(const std::string& nombre_archivo, const std::st
 }
 
 // Función para medir algoritmo
-unsigned int medir_algoritmo(const std::string& nombre, unsigned int(*func)(const std::string&, const std::string&), 
+unsigned int medirAlgoritmo(const std::string& nombre, unsigned int(*func)(const std::string&, const std::string&), 
                             const std::string& texto, const std::string& patron) {
     try {
-        iniciar_medicion(nombre, "Algoritmo", patron);
+        iniciarMedicion(nombre, "Algoritmo", patron);
 
-        size_t mem_inicio = get_memory_usage();
-        auto t_inicio = iniciar_timer();
+        size_t mem_inicio = getMemoryUsage();
+        auto t_inicio = iniciarTimer();
 
         unsigned int ocurrencias = func(texto, patron);
 
-        auto t_fin = detener_timer();
-        size_t mem_fin = get_memory_usage();
+        auto t_fin = detenerTimer();
+        size_t mem_fin = getMemoryUsage();
 
-        registrar_construccion(0, 0, std::chrono::duration<double, std::milli>(0)); // sin construcción
-        registrar_busqueda(mem_inicio, mem_fin, calcular_duracion(t_inicio, t_fin), ocurrencias);
-        guardar_resultado();
+        registrarConstruccion(0, 0, std::chrono::duration<double, std::milli>(0)); // sin construcción
+        registrarBusqueda(mem_inicio, mem_fin, calcularDuracion(t_inicio, t_fin), ocurrencias);
+        guardarResultado();
 
         return ocurrencias;
     } catch (...) {
-        iniciar_medicion(nombre, "Algoritmo", patron);
-        registrar_construccion(0, 0, std::chrono::duration<double, std::milli>(0));
-        registrar_busqueda(0, 0, std::chrono::duration<double, std::milli>(0), 0);
-        guardar_resultado();
+        iniciarMedicion(nombre, "Algoritmo", patron);
+        registrarConstruccion(0, 0, std::chrono::duration<double, std::milli>(0));
+        registrarBusqueda(0, 0, std::chrono::duration<double, std::milli>(0), 0);
+        guardarResultado();
         return 0;
     }
 }
 
 // Función para medir estructura
-unsigned int medir_estructura(const std::string& nombre, std::function<std::unique_ptr<BaseStructure>(const std::string&)> constructor,
+unsigned int medirEstructura(const std::string& nombre, std::function<std::unique_ptr<BaseStructure>(const std::string&)> constructor,
                              const std::string& texto, const std::string& patron) {
     try {
-        iniciar_medicion(nombre, "Estructura", patron);
+        iniciarMedicion(nombre, "Estructura", patron);
 
-        size_t mem_inicio_const = get_memory_usage();
-        auto t_inicio_const = iniciar_timer();
+        size_t mem_inicio_const = getMemoryUsage();
+        auto t_inicio_const = iniciarTimer();
 
         auto estructura = constructor(texto);
 
-        auto t_fin_const = detener_timer();
-        size_t mem_fin_const = get_memory_usage();
+        auto t_fin_const = detenerTimer();
+        size_t mem_fin_const = getMemoryUsage();
 
-        auto t_inicio_busq = iniciar_timer();
+        auto t_inicio_busq = iniciarTimer();
         unsigned int ocurrencias = estructura->buscar(patron);
-        auto t_fin_busq = detener_timer();
-        size_t mem_fin_busq = get_memory_usage();
+        auto t_fin_busq = detenerTimer();
+        size_t mem_fin_busq = getMemoryUsage();
 
-        registrar_construccion(mem_inicio_const, mem_fin_const, calcular_duracion(t_inicio_const, t_fin_const));
-        registrar_busqueda(mem_fin_const, mem_fin_busq, calcular_duracion(t_inicio_busq, t_fin_busq), ocurrencias);
-        guardar_resultado();
+        registrarConstruccion(mem_inicio_const, mem_fin_const, calcularDuracion(t_inicio_const, t_fin_const));
+        registrarBusqueda(mem_fin_const, mem_fin_busq, calcularDuracion(t_inicio_busq, t_fin_busq), ocurrencias);
+        guardarResultado();
 
         return ocurrencias;
     } catch (...) {
-        iniciar_medicion(nombre, "Estructura", patron);
-        registrar_construccion(0, 0, std::chrono::duration<double, std::milli>(0));
-        registrar_busqueda(0, 0, std::chrono::duration<double, std::milli>(0), 0);
-        guardar_resultado();
+        iniciarMedicion(nombre, "Estructura", patron);
+        registrarConstruccion(0, 0, std::chrono::duration<double, std::milli>(0));
+        registrarBusqueda(0, 0, std::chrono::duration<double, std::milli>(0), 0);
+        guardarResultado();
         return 0;
     }
 }
