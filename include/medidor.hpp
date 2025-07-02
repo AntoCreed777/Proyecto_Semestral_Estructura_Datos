@@ -1,3 +1,14 @@
+/**
+ * @file medidor.hpp
+ * @brief Sistema de medición de rendimiento para algoritmos de búsqueda de patrones.
+ * 
+ * Proporciona funciones para medir tiempo de ejecución, uso de memoria y
+ * rendimiento general de diferentes algoritmos y estructuras de datos
+ * utilizados en búsqueda de patrones. Incluye exportación de resultados a JSON.
+ * 
+ * @date 2025
+ */
+
 #ifndef MEDIDOR_HPP
 #define MEDIDOR_HPP
 

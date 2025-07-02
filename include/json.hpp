@@ -1,3 +1,22 @@
+/**
+ * @file json.hpp
+ * @brief Librería externa nlohmann/json para manejo de JSON en C++.
+ * 
+ * Esta es la librería nlohmann/json v3.12.0, una librería de código abierto
+ * ampliamente utilizada para el manejo de datos JSON en C++.
+ * 
+ * @author Niels Lohmann y colaboradores
+ * @version 3.12.0
+ * @date 2013-2025
+ * @license MIT License
+ * @see https://github.com/nlohmann/json
+ * @see https://json.nlohmann.me (documentación oficial)
+ * 
+ * @note Esta es una librería externa incluida en el proyecto para
+ *       facilitar la exportación de resultados de medición a formato JSON.
+ * @note No modificar este archivo - es código de terceros.
+ */
+
 //     __ _____ _____ _____
 //  __|  |   __|     |   | |  JSON for Modern C++
 // |  |  |__   |  |  | | | |  version 3.12.0

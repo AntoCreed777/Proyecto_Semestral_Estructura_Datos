@@ -1,13 +1,22 @@
-#pragma once
-
 /**
  * @file definiciones.hpp
- * @brief Definiciones y macros útiles.
+ * @brief Definiciones globales, tipos de datos y macros para el proyecto.
  * 
- * Incluye tipos de datos, macros para bucles y funciones de optimización de entrada/salida.
+ * Este archivo contiene todas las definiciones fundamentales utilizadas
+ * a lo largo del proyecto, incluyendo:
+ * - Tipos de datos personalizados y aliases
+ * - Macros para optimización y conveniencia
+ * - Constantes globales y códigos de color
+ * - Funciones de optimización de I/O
  * 
- * @note Se recomienda incluir este archivo en cada codigo.
+ * Se recomienda incluir este archivo en todos los módulos del proyecto
+ * para asegurar consistencia en tipos y definiciones.
+ * 
+ * @date 2025
+ * @note Incluir este archivo al inicio de cada implementación
  */
+
+#pragma once
 
 #include <iostream>
 #include <vector>

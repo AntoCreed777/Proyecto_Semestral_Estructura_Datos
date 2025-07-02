@@ -1,3 +1,14 @@
+/**
+ * @file fm_index.hpp
+ * @brief Implementación de FM-Index para búsqueda eficiente de patrones.
+ * 
+ * Contiene la clase FMIndex que implementa el algoritmo FM-Index,
+ * una estructura de datos avanzada que combina la transformada de
+ * Burrows-Wheeler con arrays de sufijos para búsquedas muy eficientes.
+ * 
+ * @date 2025
+ */
+
 #pragma once
 
 #include "definiciones.hpp"
@@ -5,9 +16,29 @@
 
 /**
  * @class FMIndex
- * @brief Clase para implementar búsqueda de patrones en textos mediante FM-Index.
+ * @brief Implementación de búsqueda de patrones mediante FM-Index con soporte
+ *        para variaciones de capitalización.
+ * 
+ * FM-Index es una estructura de datos altamente eficiente que combina:
+ * - Transformada de Burrows-Wheeler (BWT) para compresión
+ * - Array de sufijos para indexación
+ * - Tablas auxiliares (C table y Occ table) para búsqueda rápida
+ * 
+ * Características de esta implementación:
+ * - Búsqueda backward (de derecha a izquierda en el patrón)
+ * - Búsqueda solo exacta (variaciones de capitalización comentadas)
+ * - Muy eficiente en memoria para textos largos
+ * - Construcción completa de BWT y tablas auxiliares
+ * 
+ * Complejidad temporal:
+ * - Construcción: O(n log n) donde n es el tamaño del texto
+ * - Búsqueda: O(m) donde m es el tamaño del patrón
+ * 
+ * Complejidad espacial: O(n) para las estructuras principales
+ * 
+ * @note Las variaciones de capitalización están comentadas en la implementación actual.
  */
-class FMIndex : public BaseStructure {  // Herencia
+class FMIndex : public BaseStructure {
 public:
     /**
      * @brief Constructor que inicializa la estructura FM-Index con el texto.
