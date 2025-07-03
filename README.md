@@ -16,7 +16,7 @@ Sistema de benchmarking y análisis de algoritmos de búsqueda de patrones en te
 |--------|--------|-----------|
 | Antonio Jesus Benavides Puentes | [@AntoCreed777](https://github.com/AntoCreed777) | 2023455954 |
 | Lucas Daniel Morales Oyanedel | [@Falling-Bridge](https://github.com/Falling-Bridge) | 2023441490 |
-| Javier Alejandro Campos Contreras | [@huebitoo](https://github.com/4lehh) | 2023432857 |
+| Javier Alejandro Campos Contreras | [@4lehh](https://github.com/4lehh) | 2023432857 |
 
 ## 📋 Tabla de Contenidos
 
