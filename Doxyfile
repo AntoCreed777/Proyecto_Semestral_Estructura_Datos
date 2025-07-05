@@ -1,0 +1,64 @@
+# Doxyfile generado para Proyecto_Semestral_Estructura_Datos
+# Documentación automática con Doxygen
+
+# Proyecto
+PROJECT_NAME           = "Algoritmos de Búsqueda de Patrones"
+PROJECT_BRIEF          = "Benchmarking de algoritmos y estructuras de datos para búsqueda de patrones en texto."
+PROJECT_NUMBER         = 2025-1
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = Spanish
+
+# Archivos fuente
+INPUT                  = src include analisis
+FILE_PATTERNS          = *.cpp *.hpp *.h *.py
+RECURSIVE              = YES
+EXCLUDE                = build test/json test/textos
+
+# Documentación
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_ANON_NSPACES   = YES
+
+# Formatos de salida
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = YES
+LATEX_OUTPUT           = latex
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+
+# Opciones de HTML
+HTML_COLORSTYLE_HUE    = 220
+HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_GAMMA  = 80
+GENERATE_TREEVIEW      = YES
+
+# Diagramas
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+CLASS_DIAGRAMS         = YES
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+GRAPHICAL_HIERARCHY    = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
+
+# Otros
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+
+# Markdown
+USE_MDFILE_AS_MAINPAGE = README.md
+MARKDOWN_SUPPORT       = YES
+
+# Python
+EXTENSION_MAPPING      = py=Python
