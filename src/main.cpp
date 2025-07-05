@@ -80,7 +80,7 @@ int main() {
         {"SuffixTrees",  [](const std::string& texto) { return std::make_unique<SuffixTrees>(texto); }},
     };
 
-    for (auto nombre_archivo : nombres_archivos) {
+    for (const auto& nombre_archivo : nombres_archivos) {
         int contador = 0;
         while(contador < ITERACIONES){
             try{
@@ -98,6 +98,7 @@ int main() {
             
                 if (texto.empty()) {
                     imprimir(AMARILLO "No hay contenido en el archivo: " RESET_COLOR << archivo_archivo_completo.string());
+                    contador++;
                     continue;
                 }
     
@@ -126,11 +127,11 @@ int main() {
                     (ocurrencias_unicas.size() == 1) ? *ocurrencias_unicas.begin() : 0,
                     memoria_maxima_kb
                 ); 
-                contador++;
             }
             catch (const std::exception &e) {
                 std::cerr << "Error al realizar los tests: " << e.what() << std::endl;
             }
+            contador++;
         }
     }
 
