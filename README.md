@@ -28,7 +28,7 @@ Sistema de benchmarking y análisis de algoritmos de búsqueda de patrones en te
 - [▶️ Ejecución](#️-ejecución)
 - [📊 Análisis de Resultados](#-análisis-de-resultados)
 - [🛠️ Solución de Problemas](#️-solución-de-problemas)
-- [📚 Documentación](#-documentación)
+- [📚 Documentación del Código](#-documentación-del-código)
 
 ## 🚀 Inicio Rápido
 
@@ -473,20 +473,60 @@ ls -lh test/textos/
 
 </details>
 
-## 📚 Documentación
+## 📚 Documentación del Código
 
-### Archivos de Documentación
+Este proyecto cuenta con **documentación detallada** generada con Doxygen, proporcionando una referencia técnica completa de toda la implementación.
 
-- **`conventions.md`:** Convenciones de código C++
-- **Headers (.hpp):** Documentación Doxygen en archivos de cabecera
-- **`analisis.py`:** Documentación completa del sistema de análisis
+### 🔍 ¿Qué incluye la documentación?
 
-### Generar Documentación
+La documentación generada contiene:
+
+- **📖 Referencia completa de funciones**: Todas las clases, métodos y funciones documentadas
+- **⚡ Análisis de complejidad**: Información sobre complejidad temporal y espacial de cada algoritmo
+- **📊 Diagramas de clases**: Gráficos de dependencias y jerarquías (requiere Graphviz)
+- **💡 Documentación de parámetros**: Descripción de entrada, salida y casos de uso
+- **🔗 Navegación cruzada**: Enlaces entre elementos relacionados para facilitar la exploración
+
+### 🚀 Generar la documentación
 
 ```bash
-# Si se configura Doxygen (opcional)
+# Asegúrate de estar en el directorio raíz del proyecto
 doxygen Doxyfile
 ```
+
+### 📱 Acceder a la documentación
+
+Una vez generada, puedes acceder a la documentación:
+
+- **HTML interactivo**: Abre `docs/html/index.html` en tu navegador web
+- **PDF**: Compila los archivos LaTeX en `docs/latex/` para generar un PDF
+
+### 🛠️ Requisitos para documentación completa
+
+| Componente | Propósito | Instalación |
+|------------|-----------|-------------|
+| **Doxygen** | Generador de documentación | `winget install doxygen` (Windows)<br>`brew install doxygen` (macOS)<br>`sudo apt install doxygen` (Linux) |
+| **Graphviz** | Diagramas y gráficos | `winget install graphviz` (Windows)<br>`brew install graphviz` (macOS)<br>`sudo apt install graphviz` (Linux) |
+| **LaTeX** | Generación de PDF | Opcional para documentación HTML |
+
+> [!TIP]
+> **Para desarrolladores**: La documentación HTML es interactiva y permite búsquedas rápidas. Ideal para explorar el código y entender las relaciones entre componentes.
+
+> [!IMPORTANT]
+> **Para usuarios**: Si solo necesitas ejecutar el proyecto, la documentación es opcional. Los comentarios en el código y este README son suficientes para el uso básico.
+
+### 🎯 Navegación recomendada
+
+1. **Empezar aquí**: `docs/html/index.html` - Página principal
+2. **Explorar algoritmos**: Sección "Classes" para ver cada implementación
+3. **Buscar funciones**: Usar el buscador integrado en la documentación HTML
+4. **Ver diagramas**: Sección "Collaboration diagrams" para entender las relaciones
+
+### 📋 Archivos de referencia adicionales
+
+- **`conventions.md`**: Convenciones de código C++ del proyecto
+- **Headers (.hpp)**: Documentación Doxygen integrada en archivos de cabecera
+- **`analisis.py`**: Documentación completa del sistema de análisis estadístico
 
 ### Convenciones de Código
 
